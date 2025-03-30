@@ -2,6 +2,8 @@ import { motion } from "framer-motion";
 import { Github, Linkedin, Twitter, Dribbble } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTypingEffect } from "@/hooks/use-typing-effect";
+import { useTheme } from "@/hooks/use-theme";
+import { cn } from "@/lib/utils";
 
 const socialLinks = [
   { name: "GitHub", icon: Github, href: "https://github.com" },
@@ -13,9 +15,15 @@ const socialLinks = [
 export default function Hero() {
   const roles = ["Full Stack Developer", "UI/UX Designer", "Problem Solver", "Creative Thinker"];
   const text = useTypingEffect(roles, { typingSpeed: 100, deleteSpeed: 50, delayBeforeDelete: 1000, delayBeforeType: 300 });
+  const { theme } = useTheme();
 
   return (
-    <section id="home" className="min-h-screen flex items-center pt-16 pb-10 bg-gradient-to-br from-gray-50 to-white">
+    <section id="home" className={cn(
+      "min-h-screen flex items-center pt-16 pb-10",
+      theme === "dark" 
+        ? "bg-gradient-to-br from-gray-900 to-gray-800" 
+        : "bg-gradient-to-br from-gray-50 to-white"
+    )}>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row items-center">
           <motion.div 
@@ -24,13 +32,22 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold font-sans leading-tight mb-4">
+            <h1 className={cn(
+              "text-4xl sm:text-5xl md:text-6xl font-bold font-sans leading-tight mb-4",
+              theme === "dark" ? "text-white" : "text-gray-900"
+            )}>
               Hi, I'm <span className="text-primary">John Doe</span>
             </h1>
-            <h2 className="text-xl sm:text-2xl md:text-3xl text-gray-600 font-medium mb-6 h-8">
+            <h2 className={cn(
+              "text-xl sm:text-2xl md:text-3xl font-medium mb-6 h-8",
+              theme === "dark" ? "text-gray-300" : "text-gray-600"
+            )}>
               {text}
             </h2>
-            <p className="text-gray-600 text-lg mb-8 max-w-xl">
+            <p className={cn(
+              "text-lg mb-8 max-w-xl",
+              theme === "dark" ? "text-gray-300" : "text-gray-600"
+            )}>
               I build exceptional digital experiences that are fast, accessible, visually appealing, and responsive. Let's turn your vision into reality.
             </p>
             <div className="flex flex-wrap gap-4">
@@ -44,7 +61,10 @@ export default function Hero() {
               <Button 
                 size="lg" 
                 variant="outline" 
-                className="border-primary text-primary hover:bg-primary/10 font-medium rounded-md"
+                className={cn(
+                  "border-primary text-primary font-medium rounded-md",
+                  theme === "dark" ? "hover:bg-primary/20" : "hover:bg-primary/10"
+                )}
                 asChild
               >
                 <a href="#contact">Contact Me</a>
@@ -57,7 +77,10 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
           >
-            <div className="w-64 h-64 md:w-80 md:h-80 overflow-hidden rounded-full mx-auto shadow-xl border-4 border-white">
+            <div className={cn(
+              "w-64 h-64 md:w-80 md:h-80 overflow-hidden rounded-full mx-auto shadow-xl border-4",
+              theme === "dark" ? "border-gray-700" : "border-white"
+            )}>
               <img 
                 src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" 
                 alt="John Doe profile"
@@ -79,7 +102,10 @@ export default function Hero() {
                 <a 
                   key={item.name}
                   href={item.href}
-                  className="text-gray-600 hover:text-primary transition-colors duration-300" 
+                  className={cn(
+                    "hover:text-primary transition-colors duration-300",
+                    theme === "dark" ? "text-gray-400" : "text-gray-600"
+                  )}
                   aria-label={item.name}
                   target="_blank"
                   rel="noopener noreferrer"

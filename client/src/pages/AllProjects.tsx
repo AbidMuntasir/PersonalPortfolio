@@ -47,11 +47,9 @@ export default function AllProjects() {
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8">
               <div>
-                <Link href="/#projects">
-                  <a className="inline-flex items-center text-gray-600 hover:text-primary mb-4 sm:mb-0">
-                    <ArrowLeft className="h-4 w-4 mr-1" />
-                    <span>Back to Home</span>
-                  </a>
+                <Link href="/#projects" className="inline-flex items-center text-gray-600 hover:text-primary mb-4 sm:mb-0">
+                  <ArrowLeft className="h-4 w-4 mr-1" />
+                  <span>Back to Home</span>
                 </Link>
               </div>
               

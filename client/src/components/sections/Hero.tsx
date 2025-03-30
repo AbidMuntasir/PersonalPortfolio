@@ -21,8 +21,8 @@ export default function Hero() {
     <section id="home" className={cn(
       "min-h-screen flex items-center pt-16 pb-10",
       theme === "dark" 
-        ? "bg-gradient-to-br from-gray-900 to-gray-800" 
-        : "bg-gradient-to-br from-gray-50 to-white"
+        ? "bg-gradient-to-br from-background to-background/80" 
+        : "bg-gradient-to-br from-background to-background/80"
     )}>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row items-center">
@@ -32,28 +32,19 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <h1 className={cn(
-              "text-4xl sm:text-5xl md:text-6xl font-bold font-sans leading-tight mb-4",
-              theme === "dark" ? "text-white" : "text-gray-900"
-            )}>
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold font-sans leading-tight mb-4 text-foreground">
               Hi, I'm <span className="text-primary">John Doe</span>
             </h1>
-            <h2 className={cn(
-              "text-xl sm:text-2xl md:text-3xl font-medium mb-6 h-8",
-              theme === "dark" ? "text-gray-300" : "text-gray-600"
-            )}>
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-medium mb-6 h-8 text-muted-foreground">
               {text}
             </h2>
-            <p className={cn(
-              "text-lg mb-8 max-w-xl",
-              theme === "dark" ? "text-gray-300" : "text-gray-600"
-            )}>
+            <p className="text-lg mb-8 max-w-xl text-muted-foreground">
               I build exceptional digital experiences that are fast, accessible, visually appealing, and responsive. Let's turn your vision into reality.
             </p>
             <div className="flex flex-wrap gap-4">
               <Button 
                 size="lg" 
-                className="bg-primary hover:bg-primary/90 text-white font-medium rounded-md shadow-md"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground font-medium rounded-md shadow-md"
                 asChild
               >
                 <a href="#projects">View My Work</a>
@@ -61,10 +52,7 @@ export default function Hero() {
               <Button 
                 size="lg" 
                 variant="outline" 
-                className={cn(
-                  "border-primary text-primary font-medium rounded-md",
-                  theme === "dark" ? "hover:bg-primary/20" : "hover:bg-primary/10"
-                )}
+                className="border-primary text-primary font-medium rounded-md hover:bg-primary/10"
                 asChild
               >
                 <a href="#contact">Contact Me</a>
@@ -79,7 +67,7 @@ export default function Hero() {
           >
             <div className={cn(
               "w-64 h-64 md:w-80 md:h-80 overflow-hidden rounded-full mx-auto shadow-xl border-4",
-              theme === "dark" ? "border-gray-700" : "border-white"
+              theme === "dark" ? "border-muted" : "border-background"
             )}>
               <img 
                 src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" 
@@ -102,10 +90,7 @@ export default function Hero() {
                 <a 
                   key={item.name}
                   href={item.href}
-                  className={cn(
-                    "hover:text-primary transition-colors duration-300",
-                    theme === "dark" ? "text-gray-400" : "text-gray-600"
-                  )}
+                  className="text-muted-foreground hover:text-primary transition-colors duration-300"
                   aria-label={item.name}
                   target="_blank"
                   rel="noopener noreferrer"

@@ -35,16 +35,13 @@ export default function Header() {
   return (
     <header className={cn(
       "fixed w-full z-50 transition-all duration-300",
-      isScrolled ? 
-        (theme === "dark" ? "bg-gray-900 shadow-md" : "bg-white shadow-md") : 
-        (theme === "dark" ? "bg-gray-900/80 backdrop-blur-sm" : "bg-white/80 backdrop-blur-sm")
+      isScrolled 
+        ? "bg-background shadow-md" 
+        : "bg-background/80 backdrop-blur-sm"
     )}>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4">
-          <a href="#home" className={cn(
-            "text-2xl font-bold font-sans",
-            theme === "dark" ? "text-gray-100" : "text-gray-900"
-          )}>
+          <a href="#home" className="text-2xl font-bold font-sans text-foreground">
             <span className="text-primary">John</span> Doe
           </a>
           
@@ -55,12 +52,7 @@ export default function Header() {
                 <a 
                   key={link.name}
                   href={link.href}
-                  className={cn(
-                    "font-medium transition-colors duration-300",
-                    theme === "dark" 
-                      ? "text-gray-300 hover:text-primary" 
-                      : "text-gray-600 hover:text-primary"
-                  )}
+                  className="font-medium text-muted-foreground hover:text-primary transition-colors duration-300"
                 >
                   {link.name}
                 </a>
@@ -71,10 +63,10 @@ export default function Header() {
             <button
               onClick={toggleTheme}
               className={cn(
-                "p-2 rounded-full transition-colors duration-300 focus:outline-none",
+                "p-2 rounded-full transition-colors duration-300 focus:outline-none bg-secondary",
                 theme === "dark" 
-                  ? "bg-gray-800 text-yellow-500 hover:bg-gray-700" 
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  ? "text-yellow-500 hover:bg-secondary/80" 
+                  : "text-gray-700 hover:bg-secondary/80"
               )}
               aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
             >
@@ -88,10 +80,10 @@ export default function Header() {
             <button
               onClick={toggleTheme}
               className={cn(
-                "p-2 rounded-full transition-colors duration-300 focus:outline-none",
+                "p-2 rounded-full transition-colors duration-300 focus:outline-none bg-secondary",
                 theme === "dark" 
-                  ? "bg-gray-800 text-yellow-500 hover:bg-gray-700" 
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  ? "text-yellow-500 hover:bg-secondary/80" 
+                  : "text-gray-700 hover:bg-secondary/80"
               )}
               aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
             >
@@ -100,10 +92,7 @@ export default function Header() {
             
             {/* Mobile Menu Button */}
             <button 
-              className={cn(
-                "focus:outline-none", 
-                theme === "dark" ? "text-gray-300 hover:text-primary" : "text-gray-600 hover:text-primary"
-              )}
+              className="focus:outline-none text-muted-foreground hover:text-primary"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
               {mobileMenuOpen ? (
@@ -118,21 +107,13 @@ export default function Header() {
       
       {/* Mobile Navigation */}
       {mobileMenuOpen && (
-        <nav className={cn(
-          "md:hidden py-4 px-4 shadow-inner",
-          theme === "dark" ? "bg-gray-800" : "bg-white"
-        )}>
+        <nav className="md:hidden py-4 px-4 shadow-inner bg-card">
           <div className="flex flex-col space-y-4">
             {navLinks.map((link) => (
               <a
                 key={link.name}
                 href={link.href}
-                className={cn(
-                  "font-medium transition-colors duration-300 py-2",
-                  theme === "dark" 
-                    ? "text-gray-300 hover:text-primary" 
-                    : "text-gray-600 hover:text-primary"
-                )}
+                className="font-medium text-muted-foreground hover:text-primary transition-colors duration-300 py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 {link.name}

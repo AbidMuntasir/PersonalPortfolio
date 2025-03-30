@@ -1,4 +1,4 @@
-import { users, type User, type InsertUser } from "@shared/schema";
+import { users, messages, type User, type InsertUser, type Message, type InsertMessage } from "@shared/schema";
 
 // modify the interface with any CRUD methods
 // you might need
@@ -7,15 +7,24 @@ export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
+  
+  // Message related methods
+  getMessages(): Promise<Message[]>;
+  getMessage(id: number): Promise<Message | undefined>;
+  createMessage(message: InsertMessage & { createdAt: string }): Promise<Message>;
 }
 
 export class MemStorage implements IStorage {
   private users: Map<number, User>;
-  currentId: number;
+  private messages: Map<number, Message>;
+  currentUserId: number;
+  currentMessageId: number;
 
   constructor() {
     this.users = new Map();
-    this.currentId = 1;
+    this.messages = new Map();
+    this.currentUserId = 1;
+    this.currentMessageId = 1;
   }
 
   async getUser(id: number): Promise<User | undefined> {
@@ -29,10 +38,26 @@ export class MemStorage implements IStorage {
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
-    const id = this.currentId++;
+    const id = this.currentUserId++;
     const user: User = { ...insertUser, id };
     this.users.set(id, user);
     return user;
+  }
+  
+  // Message related methods
+  async getMessages(): Promise<Message[]> {
+    return Array.from(this.messages.values());
+  }
+  
+  async getMessage(id: number): Promise<Message | undefined> {
+    return this.messages.get(id);
+  }
+  
+  async createMessage(messageData: InsertMessage & { createdAt: string }): Promise<Message> {
+    const id = this.currentMessageId++;
+    const message: Message = { ...messageData, id };
+    this.messages.set(id, message);
+    return message;
   }
 }
 

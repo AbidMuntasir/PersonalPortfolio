@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { ExternalLink, Github } from "lucide-react";
+import { Link } from "wouter";
 import { useIntersectionObserver } from "@/hooks/use-intersection-observer";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -91,12 +92,12 @@ export default function Projects() {
             className="bg-primary hover:bg-primary/90 text-white font-medium rounded-md shadow-md"
             asChild
           >
-            <a href="#" className="inline-flex items-center">
+            <Link href="/projects" className="inline-flex items-center">
               <span>View All Projects</span>
               <svg xmlns="http://www.w3.org/2000/svg" className="ml-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
               </svg>
-            </a>
+            </Link>
           </Button>
         </motion.div>
       </div>

@@ -9,6 +9,7 @@ type ThemeContextType = {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
+// Create a theme provider component
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>("light"); // Initialize with default
   const [isInitialized, setIsInitialized] = useState(false);
@@ -16,15 +17,23 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   // Initialize theme from localStorage or system preference (only once)
   useEffect(() => {
     if (!isInitialized) {
-      // Check if theme is stored in localStorage
-      const savedTheme = window.localStorage.getItem("theme") as Theme;
-      // Check for system preference if no saved theme
-      if (!savedTheme) {
-        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-        setTheme(prefersDark ? "dark" : "light");
-      } else {
-        setTheme(savedTheme === "dark" ? "dark" : "light");
+      try {
+        // Check if theme is stored in localStorage
+        const savedTheme = window.localStorage.getItem("theme") as Theme;
+        
+        // Check for system preference if no saved theme
+        if (!savedTheme) {
+          const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+          setTheme(prefersDark ? "dark" : "light");
+        } else {
+          setTheme(savedTheme === "dark" ? "dark" : "light");
+        }
+      } catch (error) {
+        console.error("Error initializing theme:", error);
+        // Default to light theme if there's an error
+        setTheme("light");
       }
+      
       setIsInitialized(true);
     }
   }, [isInitialized]);
@@ -32,48 +41,33 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   // Apply theme changes to document and save to localStorage
   useEffect(() => {
     if (isInitialized) {
-      // Update documentElement class and localStorage when theme changes
-      const root = window.document.documentElement;
-      
-      // First clear both classes to ensure clean state
-      root.classList.remove('light');
-      root.classList.remove('dark');
-      
-      // Then add the current theme
-      root.classList.add(theme);
-      
-      // Also set a data attribute for additional CSS targeting
-      root.setAttribute('data-theme', theme);
-      
-      console.log('Theme changed to:', theme);
-      console.log('Classes on html element:', root.className);
-      
-      localStorage.setItem("theme", theme);
-      
-      // Only update the theme.json appearance when explicitly toggling theme
-      // Not during initialization to avoid server request flood
-      const updateServerTheme = async () => {
-        try {
-          await fetch('/api/theme', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ appearance: theme }),
-          });
-        } catch (err) {
-          console.error('Failed to update theme on server:', err);
-        }
-      };
-      
-      // Use a debounced server update to prevent rapid consecutive calls
-      const timeoutId = setTimeout(updateServerTheme, 500);
-      return () => clearTimeout(timeoutId);
+      try {
+        // Update documentElement class when theme changes
+        const root = window.document.documentElement;
+        
+        // First clear both classes to ensure clean state
+        root.classList.remove('light');
+        root.classList.remove('dark');
+        
+        // Then add the current theme
+        root.classList.add(theme);
+        
+        // Save to localStorage for persistence
+        localStorage.setItem("theme", theme);
+        
+        console.log('Theme changed to:', theme);
+      } catch (error) {
+        console.error("Error applying theme:", error);
+      }
     }
   }, [theme, isInitialized]);
 
+  // Toggle between light and dark themes
   const toggleTheme = () => {
     setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
   };
 
+  // Provide the theme context to children
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
       {children}
@@ -81,6 +75,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
+// Custom hook to use the theme context
 export function useTheme() {
   const context = useContext(ThemeContext);
   if (context === undefined) {

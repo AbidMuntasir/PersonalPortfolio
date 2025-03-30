@@ -7,15 +7,29 @@
     @apply border-border;
   }
 
-  body {
-    @apply font-sans antialiased bg-background text-foreground transition-colors duration-300;
+  html {
+    @apply transition-colors duration-300;
   }
 
-  .dark {
+  body {
+    @apply font-sans antialiased bg-white text-gray-900 transition-colors duration-300;
+  }
+
+  /* Light theme styles */
+  html.light {
+    color-scheme: light;
+  }
+
+  html.light body {
+    @apply bg-white text-gray-900;
+  }
+
+  /* Dark theme styles */
+  html.dark {
     color-scheme: dark;
   }
 
-  .dark body {
+  html.dark body {
     @apply bg-gray-950 text-gray-200;
   }
 }

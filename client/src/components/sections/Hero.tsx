@@ -1,19 +1,32 @@
 import { motion } from "framer-motion";
-import { Github, Linkedin, Twitter, Dribbble } from "lucide-react";
+import { Github, Linkedin, Twitter, Dribbble, LucideIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTypingEffect } from "@/hooks/use-typing-effect";
 import { useTheme } from "@/hooks/use-theme";
 import { cn } from "@/lib/utils";
+import {
+  name,
+  roles,
+  bio,
+  profileImage,
+  socialLinks as personalSocialLinks
+} from "@/lib/personal-info";
 
-const socialLinks = [
-  { name: "GitHub", icon: Github, href: "https://github.com" },
-  { name: "LinkedIn", icon: Linkedin, href: "https://linkedin.com" },
-  { name: "Twitter", icon: Twitter, href: "https://twitter.com" },
-  { name: "Dribbble", icon: Dribbble, href: "https://dribbble.com" },
-];
+// Map icon strings to actual Lucide icon components
+const iconMap: Record<string, LucideIcon> = {
+  Github,
+  Linkedin,
+  Twitter,
+  Dribbble
+};
+
+// Convert social links to include actual icon components
+const socialLinks = personalSocialLinks.map(link => ({
+  ...link,
+  icon: iconMap[link.icon as keyof typeof iconMap]
+}));
 
 export default function Hero() {
-  const roles = ["Full Stack Developer", "UI/UX Designer", "Problem Solver", "Creative Thinker"];
   const text = useTypingEffect(roles, { typingSpeed: 100, deleteSpeed: 50, delayBeforeDelete: 1000, delayBeforeType: 300 });
   const { theme } = useTheme();
 
@@ -33,13 +46,13 @@ export default function Hero() {
             transition={{ duration: 0.6 }}
           >
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold font-sans leading-tight mb-4 text-foreground">
-              Hi, I'm <span className="text-primary">John Doe</span>
+              Hi, I'm <span className="text-primary">{name}</span>
             </h1>
             <h2 className="text-xl sm:text-2xl md:text-3xl font-medium mb-6 h-8 text-muted-foreground">
               {text}
             </h2>
             <p className="text-lg mb-8 max-w-xl text-muted-foreground">
-              I build exceptional digital experiences that are fast, accessible, visually appealing, and responsive. Let's turn your vision into reality.
+              {bio}
             </p>
             <div className="flex flex-wrap gap-4">
               <Button 
@@ -70,8 +83,8 @@ export default function Hero() {
               theme === "dark" ? "border-muted" : "border-background"
             )}>
               <img 
-                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" 
-                alt="John Doe profile"
+                src={profileImage} 
+                alt={`${name} profile photo`}
                 className="w-full h-full object-cover"
               />
             </div>

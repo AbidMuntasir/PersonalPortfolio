@@ -71,7 +71,7 @@ interface BlogsResponse {
 function MessagesTab() {
   const { toast } = useToast();
   const { isAuthenticated } = useAuth();
-  
+
   // Fetch messages
   const { data, isLoading, isError, error } = useQuery<MessagesResponse>({
     queryKey: ['/api/admin/messages'],
@@ -89,7 +89,7 @@ function MessagesTab() {
   }, [isError, error, toast]);
 
   const messages = data?.messages || [];
-  
+
   if (isLoading) {
     return (
       <Card>
@@ -110,7 +110,7 @@ function MessagesTab() {
       </Card>
     );
   }
-  
+
   if (messages.length === 0) {
     return (
       <Card>
@@ -125,7 +125,7 @@ function MessagesTab() {
       </Card>
     );
   }
-  
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -180,7 +180,7 @@ function MessagesTab() {
 function ProjectsTab() {
   const { toast } = useToast();
   const { isAuthenticated } = useAuth();
-  
+
   // Fetch projects
   const { data, isLoading, isError, error } = useQuery<ProjectsResponse>({
     queryKey: ['/api/admin/projects'],
@@ -190,7 +190,7 @@ function ProjectsTab() {
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [projectToDelete, setProjectToDelete] = useState<number | null>(null);
-  
+
   // New project form state
   const [newProject, setNewProject] = useState<Partial<InsertProject>>({
     title: '',
@@ -202,7 +202,7 @@ function ProjectsTab() {
     featured: false,
     order: 0
   });
-  
+
   // Create project mutation
   const createMutation = useMutation({
     mutationFn: (project: InsertProject) => {
@@ -237,7 +237,7 @@ function ProjectsTab() {
       });
     }
   });
-  
+
   // Update project mutation
   const updateMutation = useMutation({
     mutationFn: (project: Partial<Project>) => {
@@ -263,7 +263,7 @@ function ProjectsTab() {
       });
     }
   });
-  
+
   // Delete project mutation
   const deleteMutation = useMutation({
     mutationFn: (id: number) => {
@@ -299,11 +299,11 @@ function ProjectsTab() {
   }, [isError, error, toast]);
 
   const projects = data?.projects || [];
-  
+
   const handleCreateProject = () => {
     createMutation.mutate(newProject as InsertProject);
   };
-  
+
   const handleUpdateProject = () => {
     if (!editingProject) return;
     updateMutation.mutate({
@@ -317,12 +317,12 @@ function ProjectsTab() {
       order: editingProject.order
     });
   };
-  
+
   const handleDeleteProject = () => {
     if (projectToDelete === null) return;
     deleteMutation.mutate(projectToDelete);
   };
-  
+
   if (isLoading) {
     return (
       <Card>
@@ -343,7 +343,7 @@ function ProjectsTab() {
       </Card>
     );
   }
-  
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -355,7 +355,7 @@ function ProjectsTab() {
           <Plus className="h-4 w-4" /> Add New Project
         </Button>
       </div>
-      
+
       {/* Project List */}
       {projects.length === 0 ? (
         <Card>
@@ -426,7 +426,7 @@ function ProjectsTab() {
           </Card>
         </motion.div>
       )}
-      
+
       {/* Add Project Dialog */}
       <Dialog open={showAddForm} onOpenChange={setShowAddForm}>
         <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
@@ -436,7 +436,7 @@ function ProjectsTab() {
               Fill in the details for your new project.
             </DialogDescription>
           </DialogHeader>
-          
+
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
               <Label htmlFor="title">Title</Label>
@@ -446,7 +446,7 @@ function ProjectsTab() {
                 onChange={(e) => setNewProject({...newProject, title: e.target.value})}
               />
             </div>
-            
+
             <div className="grid gap-2">
               <Label htmlFor="description">Description</Label>
               <Textarea 
@@ -456,7 +456,7 @@ function ProjectsTab() {
                 rows={4}
               />
             </div>
-            
+
             <div className="grid gap-2">
               <Label htmlFor="technologies">Technologies</Label>
               <Input 
@@ -466,9 +466,9 @@ function ProjectsTab() {
                 placeholder="React, Node, MongoDB, etc."
               />
             </div>
-            
 
-            
+
+
             <div className="grid gap-2">
               <Label htmlFor="imageUrl">Image URL</Label>
               <Input 
@@ -478,7 +478,7 @@ function ProjectsTab() {
                 placeholder="https://example.com/image.jpg"
               />
             </div>
-            
+
             <div className="grid gap-2">
               <Label htmlFor="demoUrl">Demo URL</Label>
               <Input 
@@ -488,7 +488,7 @@ function ProjectsTab() {
                 placeholder="https://example.com"
               />
             </div>
-            
+
             <div className="grid gap-2">
               <Label htmlFor="repoUrl">Repository URL</Label>
               <Input 
@@ -498,7 +498,7 @@ function ProjectsTab() {
                 placeholder="https://github.com/yourusername/project"
               />
             </div>
-            
+
             <div className="grid gap-2">
               <Label htmlFor="order">Display Order</Label>
               <Input 
@@ -508,7 +508,7 @@ function ProjectsTab() {
                 onChange={(e) => setNewProject({...newProject, order: parseInt(e.target.value) || 0})}
               />
             </div>
-            
+
             <div className="flex items-center gap-2">
               <Switch 
                 id="featured" 
@@ -518,7 +518,7 @@ function ProjectsTab() {
               <Label htmlFor="featured">Featured Project</Label>
             </div>
           </div>
-          
+
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowAddForm(false)}>Cancel</Button>
             <Button 
@@ -530,7 +530,7 @@ function ProjectsTab() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-      
+
       {/* Edit Project Dialog */}
       <Dialog open={!!editingProject} onOpenChange={(open) => !open && setEditingProject(null)}>
         <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
@@ -540,7 +540,7 @@ function ProjectsTab() {
               Update the details for your project.
             </DialogDescription>
           </DialogHeader>
-          
+
           {editingProject && (
             <div className="grid gap-4 py-4">
               <div className="grid gap-2">
@@ -551,7 +551,7 @@ function ProjectsTab() {
                   onChange={(e) => setEditingProject({...editingProject, title: e.target.value})}
                 />
               </div>
-              
+
               <div className="grid gap-2">
                 <Label htmlFor="edit-description">Description</Label>
                 <Textarea 
@@ -561,7 +561,7 @@ function ProjectsTab() {
                   rows={4}
                 />
               </div>
-              
+
               <div className="grid gap-2">
                 <Label htmlFor="edit-technologies">Technologies</Label>
                 <Input 
@@ -570,9 +570,9 @@ function ProjectsTab() {
                   onChange={(e) => setEditingProject({...editingProject, technologies: e.target.value.split(',').map(t => t.trim()).filter(Boolean)})}
                 />
               </div>
-              
 
-              
+
+
               <div className="grid gap-2">
                 <Label htmlFor="edit-imageUrl">Image URL</Label>
                 <Input 
@@ -581,7 +581,7 @@ function ProjectsTab() {
                   onChange={(e) => setEditingProject({...editingProject, imageUrl: e.target.value || null})}
                 />
               </div>
-              
+
               <div className="grid gap-2">
                 <Label htmlFor="edit-demoUrl">Demo URL</Label>
                 <Input 
@@ -590,7 +590,7 @@ function ProjectsTab() {
                   onChange={(e) => setEditingProject({...editingProject, demoUrl: e.target.value || null})}
                 />
               </div>
-              
+
               <div className="grid gap-2">
                 <Label htmlFor="edit-repoUrl">Repository URL</Label>
                 <Input 
@@ -599,7 +599,7 @@ function ProjectsTab() {
                   onChange={(e) => setEditingProject({...editingProject, repoUrl: e.target.value || null})}
                 />
               </div>
-              
+
               <div className="grid gap-2">
                 <Label htmlFor="edit-order">Display Order</Label>
                 <Input 
@@ -609,7 +609,7 @@ function ProjectsTab() {
                   onChange={(e) => setEditingProject({...editingProject, order: parseInt(e.target.value) || 0})}
                 />
               </div>
-              
+
               <div className="flex items-center gap-2">
                 <Switch 
                   id="edit-featured" 
@@ -620,7 +620,7 @@ function ProjectsTab() {
               </div>
             </div>
           )}
-          
+
           <DialogFooter>
             <Button variant="outline" onClick={() => setEditingProject(null)}>Cancel</Button>
             <Button 
@@ -632,7 +632,7 @@ function ProjectsTab() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-      
+
       {/* Delete Confirmation */}
       <AlertDialog open={projectToDelete !== null} onOpenChange={(open) => !open && setProjectToDelete(null)}>
         <AlertDialogContent>
@@ -661,7 +661,7 @@ function ProjectsTab() {
 function SkillsTab() {
   const { toast } = useToast();
   const { isAuthenticated } = useAuth();
-  
+
   // Fetch skills
   const { data, isLoading, isError, error } = useQuery<SkillsResponse>({
     queryKey: ['/api/admin/skills'],
@@ -671,15 +671,15 @@ function SkillsTab() {
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingSkill, setEditingSkill] = useState<Skill | null>(null);
   const [skillToDelete, setSkillToDelete] = useState<number | null>(null);
-  
+
   // New skill form state
   const [newSkill, setNewSkill] = useState<Partial<InsertSkill>>({
     name: '',
-    category: '',
+    category: 'skill', // Set a default category
     level: 80,
     iconName: null
   });
-  
+
   // Create skill mutation
   const createMutation = useMutation({
     mutationFn: (skill: InsertSkill) => {
@@ -696,7 +696,7 @@ function SkillsTab() {
       setShowAddForm(false);
       setNewSkill({
         name: '',
-        category: '',
+        category: 'skill', // Set a default category
         level: 80,
         iconName: null
       });
@@ -710,7 +710,7 @@ function SkillsTab() {
       });
     }
   });
-  
+
   // Update skill mutation
   const updateMutation = useMutation({
     mutationFn: (skill: Partial<Skill>) => {
@@ -736,7 +736,7 @@ function SkillsTab() {
       });
     }
   });
-  
+
   // Delete skill mutation
   const deleteMutation = useMutation({
     mutationFn: (id: number) => {
@@ -772,11 +772,11 @@ function SkillsTab() {
   }, [isError, error, toast]);
 
   const skills = data?.skills || [];
-  
+
   const handleCreateSkill = () => {
     createMutation.mutate(newSkill as InsertSkill);
   };
-  
+
   const handleUpdateSkill = () => {
     if (!editingSkill) return;
     updateMutation.mutate({
@@ -786,12 +786,12 @@ function SkillsTab() {
       iconName: editingSkill.iconName
     });
   };
-  
+
   const handleDeleteSkill = () => {
     if (skillToDelete === null) return;
     deleteMutation.mutate(skillToDelete);
   };
-  
+
   if (isLoading) {
     return (
       <Card>
@@ -811,7 +811,7 @@ function SkillsTab() {
       </Card>
     );
   }
-  
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -823,7 +823,7 @@ function SkillsTab() {
           <Plus className="h-4 w-4" /> Add New Skill
         </Button>
       </div>
-      
+
       {/* Skills List */}
       {skills.length === 0 ? (
         <Card>
@@ -884,7 +884,7 @@ function SkillsTab() {
           </Card>
         </motion.div>
       )}
-      
+
       {/* Add Skill Dialog */}
       <Dialog open={showAddForm} onOpenChange={setShowAddForm}>
         <DialogContent className="max-w-lg">
@@ -894,7 +894,7 @@ function SkillsTab() {
               Fill in the details for your new skill.
             </DialogDescription>
           </DialogHeader>
-          
+
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
               <Label htmlFor="name">Skill Name</Label>
@@ -905,28 +905,7 @@ function SkillsTab() {
                 placeholder="React, Python, etc."
               />
             </div>
-            
-            <div className="grid gap-2">
-              <Label htmlFor="category">Category</Label>
-              <Select
-                value={newSkill.category}
-                onValueChange={(value) => setNewSkill({...newSkill, category: value})}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a category" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="frontend">Frontend</SelectItem>
-                  <SelectItem value="backend">Backend</SelectItem>
-                  <SelectItem value="database">Database</SelectItem>
-                  <SelectItem value="devops">DevOps</SelectItem>
-                  <SelectItem value="mobile">Mobile</SelectItem>
-                  <SelectItem value="design">Design</SelectItem>
-                  <SelectItem value="other">Other</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            
+
             <div className="grid gap-2">
               <Label htmlFor="level">Proficiency Level (0-100)</Label>
               <Input 
@@ -938,7 +917,7 @@ function SkillsTab() {
                 onChange={(e) => setNewSkill({...newSkill, level: parseInt(e.target.value) || 0})}
               />
             </div>
-            
+
             <div className="grid gap-2">
               <Label htmlFor="iconName">Icon Name (optional)</Label>
               <Input 
@@ -952,19 +931,19 @@ function SkillsTab() {
               </p>
             </div>
           </div>
-          
+
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowAddForm(false)}>Cancel</Button>
             <Button 
               onClick={handleCreateSkill} 
-              disabled={createMutation.isPending || !newSkill.name || !newSkill.category}
+              disabled={createMutation.isPending || !newSkill.name}
             >
               {createMutation.isPending ? 'Creating...' : 'Create Skill'}
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
-      
+
       {/* Edit Skill Dialog */}
       <Dialog open={!!editingSkill} onOpenChange={(open) => !open && setEditingSkill(null)}>
         <DialogContent className="max-w-lg">
@@ -974,7 +953,7 @@ function SkillsTab() {
               Update the details for your skill.
             </DialogDescription>
           </DialogHeader>
-          
+
           {editingSkill && (
             <div className="grid gap-4 py-4">
               <div className="grid gap-2">
@@ -985,28 +964,7 @@ function SkillsTab() {
                   onChange={(e) => setEditingSkill({...editingSkill, name: e.target.value})}
                 />
               </div>
-              
-              <div className="grid gap-2">
-                <Label htmlFor="edit-category">Category</Label>
-                <Select
-                  value={editingSkill.category}
-                  onValueChange={(value) => setEditingSkill({...editingSkill, category: value})}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="frontend">Frontend</SelectItem>
-                    <SelectItem value="backend">Backend</SelectItem>
-                    <SelectItem value="database">Database</SelectItem>
-                    <SelectItem value="devops">DevOps</SelectItem>
-                    <SelectItem value="mobile">Mobile</SelectItem>
-                    <SelectItem value="design">Design</SelectItem>
-                    <SelectItem value="other">Other</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
+
               <div className="grid gap-2">
                 <Label htmlFor="edit-level">Proficiency Level (0-100)</Label>
                 <Input 
@@ -1018,12 +976,11 @@ function SkillsTab() {
                   onChange={(e) => setEditingSkill({...editingSkill, level: parseInt(e.target.value) || 0})}
                 />
               </div>
-              
+
               <div className="grid gap-2">
                 <Label htmlFor="edit-iconName">Icon Name (optional)</Label>
                 <Input 
-                  id="edit-iconName" 
-                  value={editingSkill.iconName || ''} 
+                  id="edit-iconName                  value={editingSkill.iconName || ''} 
                   onChange={(e) => setEditingSkill({...editingSkill, iconName: e.target.value || null})}
                 />
                 <p className="text-xs text-gray-500">
@@ -1032,19 +989,19 @@ function SkillsTab() {
               </div>
             </div>
           )}
-          
+
           <DialogFooter>
             <Button variant="outline" onClick={() => setEditingSkill(null)}>Cancel</Button>
             <Button 
               onClick={handleUpdateSkill} 
-              disabled={updateMutation.isPending || !editingSkill?.name || !editingSkill?.category}
+              disabled={updateMutation.isPending || !editingSkill?.name}
             >
               {updateMutation.isPending ? 'Saving...' : 'Save Changes'}
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
-      
+
       {/* Delete Confirmation */}
       <AlertDialog open={skillToDelete !== null} onOpenChange={(open) => !open && setSkillToDelete(null)}>
         <AlertDialogContent>
@@ -1073,7 +1030,7 @@ function SkillsTab() {
 function BlogsTab() {
   const { toast } = useToast();
   const { isAuthenticated } = useAuth();
-  
+
   // Fetch blogs
   const { data, isLoading, isError, error } = useQuery<BlogsResponse>({
     queryKey: ['/api/admin/blogs'],
@@ -1083,7 +1040,7 @@ function BlogsTab() {
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingBlog, setEditingBlog] = useState<Blog | null>(null);
   const [blogToDelete, setBlogToDelete] = useState<number | null>(null);
-  
+
   // New blog form state
   const [newBlog, setNewBlog] = useState<Partial<InsertBlog>>({
     title: '',
@@ -1094,7 +1051,7 @@ function BlogsTab() {
     published: false,
     tags: null
   });
-  
+
   // Create blog mutation
   const createMutation = useMutation({
     mutationFn: (blog: InsertBlog) => {
@@ -1104,7 +1061,7 @@ function BlogsTab() {
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
       };
-      
+
       return apiRequest('/api/admin/blogs', {
         method: 'POST',
         body: JSON.stringify(blogWithTimestamps),
@@ -1135,18 +1092,18 @@ function BlogsTab() {
       });
     }
   });
-  
+
   // Update blog mutation
   const updateMutation = useMutation({
     mutationFn: (blog: Partial<Blog>) => {
       if (!editingBlog) return Promise.reject('No blog to update');
-      
+
       // Add updated timestamp
       const blogWithTimestamp = {
         ...blog,
         updatedAt: new Date().toISOString()
       };
-      
+
       return apiRequest(`/api/admin/blogs/${editingBlog.id}`, {
         method: 'PUT',
         body: JSON.stringify(blogWithTimestamp),
@@ -1168,7 +1125,7 @@ function BlogsTab() {
       });
     }
   });
-  
+
   // Delete blog mutation
   const deleteMutation = useMutation({
     mutationFn: (id: number) => {
@@ -1204,17 +1161,17 @@ function BlogsTab() {
   }, [isError, error, toast]);
 
   const blogs = data?.blogs || [];
-  
+
   const handleCreateBlog = () => {
     // Generate slug from title if not provided
     let slug = newBlog.slug;
     if (!slug && newBlog.title) {
       slug = generateSlug(newBlog.title);
     }
-    
+
     createMutation.mutate({...newBlog, slug} as InsertBlog);
   };
-  
+
   const handleUpdateBlog = () => {
     if (!editingBlog) return;
     updateMutation.mutate({
@@ -1227,14 +1184,14 @@ function BlogsTab() {
       tags: editingBlog.tags
     });
   };
-  
+
   const handleDeleteBlog = () => {
     if (blogToDelete === null) return;
     deleteMutation.mutate(blogToDelete);
   };
-  
+
   // Using the imported generateSlug utility from utils.ts
-  
+
   if (isLoading) {
     return (
       <Card>
@@ -1255,7 +1212,7 @@ function BlogsTab() {
       </Card>
     );
   }
-  
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -1267,7 +1224,7 @@ function BlogsTab() {
           <Plus className="h-4 w-4" /> Add New Blog Post
         </Button>
       </div>
-      
+
       {/* Blog List */}
       {blogs.length === 0 ? (
         <Card>
@@ -1337,7 +1294,7 @@ function BlogsTab() {
           </Card>
         </motion.div>
       )}
-      
+
       {/* Add Blog Dialog */}
       <Dialog open={showAddForm} onOpenChange={setShowAddForm}>
         <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
@@ -1347,7 +1304,7 @@ function BlogsTab() {
               Write and publish a new blog post.
             </DialogDescription>
           </DialogHeader>
-          
+
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
               <Label htmlFor="title">Title</Label>
@@ -1366,7 +1323,7 @@ function BlogsTab() {
                 placeholder="My Awesome Blog Post"
               />
             </div>
-            
+
             <div className="grid gap-2">
               <Label htmlFor="slug">Slug</Label>
               <Input 
@@ -1379,7 +1336,7 @@ function BlogsTab() {
                 Used in the URL of your blog post. Auto-generated from title if left empty.
               </p>
             </div>
-            
+
             <div className="grid gap-2">
               <Label htmlFor="excerpt">Excerpt</Label>
               <Textarea 
@@ -1390,7 +1347,7 @@ function BlogsTab() {
                 rows={2}
               />
             </div>
-            
+
             <div className="grid gap-2">
               <Label htmlFor="content">Content</Label>
               <Textarea 
@@ -1401,7 +1358,7 @@ function BlogsTab() {
                 rows={10}
               />
             </div>
-            
+
             <div className="grid gap-2">
               <Label htmlFor="coverImage">Cover Image URL</Label>
               <Input 
@@ -1411,7 +1368,7 @@ function BlogsTab() {
                 placeholder="https://example.com/image.jpg"
               />
             </div>
-            
+
             <div className="grid gap-2">
               <Label htmlFor="tags">Tags (comma-separated)</Label>
               <Input 
@@ -1421,7 +1378,7 @@ function BlogsTab() {
                 placeholder="web development, tutorial, javascript"
               />
             </div>
-            
+
             <div className="flex items-center gap-2">
               <Switch 
                 id="published" 
@@ -1431,7 +1388,7 @@ function BlogsTab() {
               <Label htmlFor="published">Publish immediately</Label>
             </div>
           </div>
-          
+
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowAddForm(false)}>Cancel</Button>
             <Button 
@@ -1443,7 +1400,7 @@ function BlogsTab() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-      
+
       {/* Edit Blog Dialog */}
       <Dialog open={!!editingBlog} onOpenChange={(open) => !open && setEditingBlog(null)}>
         <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
@@ -1453,7 +1410,7 @@ function BlogsTab() {
               Update your blog post content.
             </DialogDescription>
           </DialogHeader>
-          
+
           {editingBlog && (
             <div className="grid gap-4 py-4">
               <div className="grid gap-2">
@@ -1464,7 +1421,7 @@ function BlogsTab() {
                   onChange={(e) => setEditingBlog({...editingBlog, title: e.target.value})}
                 />
               </div>
-              
+
               <div className="grid gap-2">
                 <Label htmlFor="edit-slug">Slug</Label>
                 <Input 
@@ -1473,7 +1430,7 @@ function BlogsTab() {
                   onChange={(e) => setEditingBlog({...editingBlog, slug: e.target.value})}
                 />
               </div>
-              
+
               <div className="grid gap-2">
                 <Label htmlFor="edit-excerpt">Excerpt</Label>
                 <Textarea 
@@ -1483,7 +1440,7 @@ function BlogsTab() {
                   rows={2}
                 />
               </div>
-              
+
               <div className="grid gap-2">
                 <Label htmlFor="edit-content">Content</Label>
                 <Textarea 
@@ -1493,7 +1450,7 @@ function BlogsTab() {
                   rows={10}
                 />
               </div>
-              
+
               <div className="grid gap-2">
                 <Label htmlFor="edit-coverImage">Cover Image URL</Label>
                 <Input 
@@ -1502,7 +1459,7 @@ function BlogsTab() {
                   onChange={(e) => setEditingBlog({...editingBlog, coverImage: e.target.value || null})}
                 />
               </div>
-              
+
               <div className="grid gap-2">
                 <Label htmlFor="edit-tags">Tags (comma-separated)</Label>
                 <Input 
@@ -1511,7 +1468,7 @@ function BlogsTab() {
                   onChange={(e) => setEditingBlog({...editingBlog, tags: e.target.value || null})}
                 />
               </div>
-              
+
               <div className="flex items-center gap-2">
                 <Switch 
                   id="edit-published" 
@@ -1524,7 +1481,7 @@ function BlogsTab() {
               </div>
             </div>
           )}
-          
+
           <DialogFooter>
             <Button variant="outline" onClick={() => setEditingBlog(null)}>Cancel</Button>
             <Button 
@@ -1536,7 +1493,7 @@ function BlogsTab() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-      
+
       {/* Delete Confirmation */}
       <AlertDialog open={blogToDelete !== null} onOpenChange={(open) => !open && setBlogToDelete(null)}>
         <AlertDialogContent>
@@ -1569,7 +1526,7 @@ export default function Admin() {
   const { logout, isAuthenticated } = useAuth();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [location] = useLocation();
-  
+
   // Determine which tab to show based on the URL
   const getTabFromPath = (path: string): string => {
     if (path.includes('/admin/messages')) return 'messages';
@@ -1578,29 +1535,29 @@ export default function Admin() {
     if (path.includes('/admin/blogs')) return 'blogs';
     return 'messages'; // default tab
   };
-  
+
   const [activeTab, setActiveTab] = useState(getTabFromPath(location));
-  
+
   // Update the tab when the location changes
   useEffect(() => {
     setActiveTab(getTabFromPath(location));
   }, [location]);
-  
+
   // Handle tab changes and update URL
   const handleTabChange = (value: string) => {
     setActiveTab(value);
     setLocation(`/admin/${value}`);
   };
-  
+
   useEffect(() => {
     setIsClient(true);
-    
+
     // Redirect if not authenticated
     if (isClient && !isAuthenticated) {
       setLocation('/login');
     }
   }, [isClient, isAuthenticated, setLocation]);
-  
+
   const handleLogout = async () => {
     try {
       setIsLoggingOut(true);
@@ -1634,7 +1591,7 @@ export default function Admin() {
           {isLoggingOut ? "Logging out..." : "Logout"}
         </Button>
       </div>
-    
+
       <motion.div
         initial="hidden"
         animate="visible"
@@ -1662,19 +1619,19 @@ export default function Admin() {
           <TabsTrigger value="skills">Skills</TabsTrigger>
           <TabsTrigger value="blogs">Blogs</TabsTrigger>
         </TabsList>
-        
+
         <TabsContent value="messages">
           <MessagesTab />
         </TabsContent>
-        
+
         <TabsContent value="projects">
           <ProjectsTab />
         </TabsContent>
-        
+
         <TabsContent value="skills">
           <SkillsTab />
         </TabsContent>
-        
+
         <TabsContent value="blogs">
           <BlogsTab />
         </TabsContent>

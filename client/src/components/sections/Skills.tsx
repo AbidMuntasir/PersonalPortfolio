@@ -21,7 +21,7 @@ export default function Skills() {
           variants={fadeIn}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-3xl md:text-4xl font-bold font-sans mb-2 text-gray-900 dark:text-white">My Skills</h2>
+          <h2 className="text-3xl md:text-4xl font-bold font-sans mb-2 text-gray-900 dark:text-white bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-purple-400 inline">My Skills</h2>
           <div className="w-20 h-1 bg-primary mx-auto mb-6"></div>
           <p className="text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
             I've worked with a variety of technologies throughout my career. Here's a snapshot of my technical expertise.
@@ -34,25 +34,33 @@ export default function Skills() {
             animate={inView ? "visible" : "hidden"}
             variants={fadeIn}
             transition={{ duration: 0.6 }}
+            className="bg-white dark:bg-gray-700 p-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-300"
           >
             <h3 className="text-xl font-bold font-sans mb-6 text-gray-900 dark:text-white">Frontend Development</h3>
             
             {frontendSkills.map((skill, index) => (
               <motion.div 
                 key={skill.name} 
-                className="mb-6"
+                className="mb-6 group cursor-pointer"
                 initial={{ opacity: 0, width: 0 }}
                 animate={inView ? { opacity: 1, width: "100%" } : { opacity: 0, width: 0 }}
                 transition={{ duration: 0.8, delay: 0.1 * index }}
+                whileHover={{ scale: 1.01 }}
               >
                 <div className="flex justify-between mb-2">
-                  <span className="font-medium text-gray-900 dark:text-white">{skill.name}</span>
+                  <span className="font-medium text-gray-900 dark:text-white group-hover:text-primary transition-colors duration-300">{skill.name}</span>
                   <span className="text-gray-600 dark:text-gray-300">{skill.percentage}%</span>
                 </div>
-                <Progress 
-                  value={inView ? skill.percentage : 0} 
-                  className="h-2 bg-gray-200 dark:bg-gray-600" 
-                />
+                <div className="relative">
+                  <Progress 
+                    value={inView ? skill.percentage : 0} 
+                    className="h-2.5 bg-gray-200 dark:bg-gray-600 overflow-hidden" 
+                  />
+                  <motion.div 
+                    className="absolute inset-0 bg-gradient-to-r from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    style={{ width: `${skill.percentage}%` }}
+                  />
+                </div>
               </motion.div>
             ))}
           </motion.div>
@@ -62,25 +70,33 @@ export default function Skills() {
             animate={inView ? "visible" : "hidden"}
             variants={fadeIn}
             transition={{ duration: 0.6, delay: 0.3 }}
+            className="bg-white dark:bg-gray-700 p-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-300"
           >
             <h3 className="text-xl font-bold font-sans mb-6 text-gray-900 dark:text-white">Backend Development</h3>
             
             {backendSkills.map((skill, index) => (
               <motion.div 
                 key={skill.name} 
-                className="mb-6"
+                className="mb-6 group cursor-pointer"
                 initial={{ opacity: 0, width: 0 }}
                 animate={inView ? { opacity: 1, width: "100%" } : { opacity: 0, width: 0 }}
                 transition={{ duration: 0.8, delay: 0.1 * index }}
+                whileHover={{ scale: 1.01 }}
               >
                 <div className="flex justify-between mb-2">
-                  <span className="font-medium text-gray-900 dark:text-white">{skill.name}</span>
+                  <span className="font-medium text-gray-900 dark:text-white group-hover:text-primary transition-colors duration-300">{skill.name}</span>
                   <span className="text-gray-600 dark:text-gray-300">{skill.percentage}%</span>
                 </div>
-                <Progress 
-                  value={inView ? skill.percentage : 0} 
-                  className="h-2 bg-gray-200 dark:bg-gray-600" 
-                />
+                <div className="relative">
+                  <Progress 
+                    value={inView ? skill.percentage : 0} 
+                    className="h-2.5 bg-gray-200 dark:bg-gray-600 overflow-hidden" 
+                  />
+                  <motion.div 
+                    className="absolute inset-0 bg-gradient-to-r from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    style={{ width: `${skill.percentage}%` }}
+                  />
+                </div>
               </motion.div>
             ))}
           </motion.div>
@@ -98,13 +114,22 @@ export default function Skills() {
             return (
               <motion.div 
                 key={tech.name} 
-                className="bg-white dark:bg-gray-700 p-4 rounded-lg shadow-md text-center"
+                className="bg-white dark:bg-gray-700 p-4 rounded-lg shadow-md text-center group cursor-pointer hover:shadow-lg"
                 initial={{ opacity: 0, y: 20 }}
                 animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                 transition={{ duration: 0.4, delay: 0.1 * index }}
+                whileHover={{ 
+                  y: -5,
+                  transition: { type: "spring", stiffness: 400, damping: 10 }
+                }}
               >
-                <Icon className={`mx-auto h-10 w-10 mb-3 ${tech.iconClass}`} />
-                <p className="font-medium text-gray-900 dark:text-white">{tech.name}</p>
+                <motion.div
+                  whileHover={{ rotate: [0, -10, 10, -10, 0], scale: 1.1 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <Icon className={`mx-auto h-10 w-10 mb-3 ${tech.iconClass} group-hover:text-primary transition-colors duration-300`} />
+                </motion.div>
+                <p className="font-medium text-gray-900 dark:text-white group-hover:text-primary transition-colors duration-300">{tech.name}</p>
               </motion.div>
             );
           })}

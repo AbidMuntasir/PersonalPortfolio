@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { getQueryFn } from '@/lib/queryClient';
+import { useQuery, useMutation } from '@tanstack/react-query';
+import { apiRequest, getQueryFn } from '@/lib/queryClient';
 import { Message } from '@shared/schema';
 import { motion } from 'framer-motion';
 import { useToast } from '@/hooks/use-toast';
+import { useLocation } from 'wouter';
 import { 
   Table, 
   TableBody, 
@@ -16,21 +17,53 @@ import {
 import { format } from 'date-fns';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Button } from '@/components/ui/button';
+import { LogOut } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function Admin() {
   const { toast } = useToast();
   const [isClient, setIsClient] = useState(false);
+  const [_, setLocation] = useLocation();
   
   useEffect(() => {
     setIsClient(true);
   }, []);
+  
+  // Logout mutation
+  const logoutMutation = useMutation({
+    mutationFn: async () => {
+      const response = await apiRequest("POST", "/api/logout", undefined);
+      return response.json();
+    },
+    onSuccess: () => {
+      toast({
+        title: "Logged out successfully",
+        description: "You have been logged out of the admin area."
+      });
+      setLocation("/login");
+    },
+    onError: (error) => {
+      toast({
+        variant: "destructive",
+        title: "Logout Failed",
+        description: error instanceof Error ? error.message : "Failed to logout. Please try again.",
+      });
+    }
+  });
 
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ['/api/messages'],
+    queryKey: ['/api/admin/messages'],
     queryFn: async () => {
-      const response = await fetch('/api/messages');
+      const response = await fetch('/api/admin/messages', {
+        credentials: 'include'
+      });
       if (!response.ok) {
+        if (response.status === 401) {
+          // Redirect to login if unauthorized
+          window.location.href = '/login';
+          throw new Error('Please login to view this page');
+        }
         throw new Error('Failed to fetch messages');
       }
       return response.json();
@@ -60,6 +93,18 @@ export default function Admin() {
 
   return (
     <div className="container mx-auto px-4 py-12">
+      <div className="flex justify-end mb-4">
+        <Button 
+          variant="outline" 
+          className="flex items-center gap-2" 
+          onClick={() => logoutMutation.mutate()}
+          disabled={logoutMutation.isPending}
+        >
+          <LogOut className="h-4 w-4" /> 
+          {logoutMutation.isPending ? "Logging out..." : "Logout"}
+        </Button>
+      </div>
+    
       <motion.div
         initial="hidden"
         animate="visible"

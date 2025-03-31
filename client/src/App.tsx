@@ -7,8 +7,6 @@ import Home from "@/pages/Home";
 import AllProjects from "@/pages/AllProjects";
 import Admin from "@/pages/Admin";
 import Login from "@/pages/Login";
-import Blogs from "@/pages/Blogs";
-import BlogPost from "@/pages/BlogPost";
 import { ThemeProvider } from "@/hooks/use-theme";
 import { AuthProvider } from "@/hooks/use-auth";
 
@@ -17,14 +15,8 @@ function Router() {
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/projects" component={AllProjects} />
-      <Route path="/blogs" component={Blogs} />
-      <Route path="/blogs/:slug" component={BlogPost} />
       <Route path="/login" component={Login} />
       <Route path="/admin" component={Admin} />
-      <Route path="/admin/messages" component={Admin} />
-      <Route path="/admin/projects" component={Admin} />
-      <Route path="/admin/skills" component={Admin} />
-      <Route path="/admin/blogs" component={Admin} />
       <Route component={NotFound} />
     </Switch>
   );

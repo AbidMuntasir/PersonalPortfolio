@@ -28,8 +28,6 @@ export const blogs = pgTable("blogs", {
   slug: text("slug").notNull(),
   content: text("content").notNull(),
   excerpt: text("excerpt").notNull(),
-  tags: text("tags"), // Comma-separated tags string
-  coverImage: text("coverImage"), // URL to cover image
   published: boolean("published").default(false).notNull(),
   createdAt: text("createdAt").notNull(),
   updatedAt: text("updatedAt").notNull(),
@@ -76,8 +74,6 @@ export const insertBlogSchema = createInsertSchema(blogs).pick({
   slug: true,
   content: true,
   excerpt: true,
-  tags: true,
-  coverImage: true,
   published: true,
 });
 

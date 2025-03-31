@@ -8,9 +8,10 @@ import {
   name,
   roles,
   bio,
-  profileImage,
   socialLinks as personalSocialLinks
 } from "@/lib/personal-info";
+// Direct import of the profile image
+import profileImage from "../../lib/photo.png";
 
 // Map icon strings to actual Lucide icon components
 const iconMap: Record<string, LucideIcon> = {

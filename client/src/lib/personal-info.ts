@@ -6,32 +6,32 @@
  */
 
 // Basic information
-export const name = "Your Name";
-export const tagline = "Full Stack Developer";
-export const bio = "I build exceptional digital experiences that are fast, accessible, visually appealing, and responsive. Let's turn your vision into reality.";
+export const name = "Abid Muntasir";
+export const tagline = "Python Data Specialist";
+export const bio = "Meet me, Abid – Turning Raw Data into Smart Decisions \n\nNeed to extract, clean, and analyze data efficiently? I’ve got you covered! While I’m new on Upwork, I have built real-world projects that showcase my expertise in web scraping, data automation, and interactive dashboards\n\n Lets connect and collaborate on your next project!";
 
 // Professional roles for the typing effect
 export const roles = [
-  "Full Stack Developer", 
-  "UI/UX Designer", 
+  "Web Scraping Expert", 
+  "Data Analyst", 
   "Problem Solver", 
   "Creative Thinker"
 ];
 
 // Profile image - replace with your own or use a URL
-export const profileImage = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80";
+export const profileImage = "photo.png";
 
 // Social media links
 export const socialLinks = [
   { 
     name: "GitHub", 
     icon: "Github", 
-    href: "https://github.com/yourusername"
+    href: "https://github.com/AbidMuntasir"
   },
   { 
     name: "LinkedIn", 
     icon: "Linkedin", 
-    href: "https://linkedin.com/in/yourprofile" 
+    href: "https://www.linkedin.com/in/abid-muntasir-b642b3353" 
   },
   { 
     name: "Twitter", 
@@ -46,9 +46,9 @@ export const socialLinks = [
 ];
 
 // Contact information
-export const contactEmail = "your.email@example.com";
-export const contactPhone = "+1 (555) 123-4567";
-export const location = "City, Country";
+export const contactEmail = "abidmuntasir.am@gmail.com";
+export const contactPhone = "+8801713386495";
+export const location = "Chattogram, Bangladesh";
 
 // Resume link - update with your own or use a file path
 export const resumeLink = "/your-resume.pdf";

@@ -13,6 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { insertMessageSchema } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
+import { contactEmail, contactPhone, location, socialLinks as personalSocialLinks } from "@/lib/personal-info";
 
 const contactFormSchema = insertMessageSchema.extend({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -23,12 +24,21 @@ const contactFormSchema = insertMessageSchema.extend({
 
 type ContactFormValues = z.infer<typeof contactFormSchema>;
 
-const socialLinks = [
-  { name: "GitHub", icon: Github, href: "https://github.com", bgClass: "bg-primary/10 text-primary hover:bg-primary hover:text-white" },
-  { name: "LinkedIn", icon: Linkedin, href: "https://linkedin.com", bgClass: "bg-primary/10 text-primary hover:bg-primary hover:text-white" },
-  { name: "Twitter", icon: Twitter, href: "https://twitter.com", bgClass: "bg-primary/10 text-primary hover:bg-primary hover:text-white" },
-  { name: "Dribbble", icon: Dribbble, href: "https://dribbble.com", bgClass: "bg-primary/10 text-primary hover:bg-primary hover:text-white" },
-];
+// Map social icons to corresponding components
+const iconMap: Record<string, any> = {
+  Github,
+  Linkedin,
+  Twitter,
+  Dribbble
+};
+
+// Create social links with icons
+const socialLinks = personalSocialLinks.map(link => ({
+  name: link.name,
+  icon: iconMap[link.icon] || Github, // Default to Github if icon not found
+  href: link.href,
+  bgClass: "bg-primary/10 text-primary hover:bg-primary hover:text-white"
+}));
 
 export default function Contact() {
   const { ref, inView } = useIntersectionObserver({ threshold: 0.1, triggerOnce: true });
@@ -76,7 +86,7 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact" ref={ref} className="py-20 bg-gray-50">
+    <section id="contact" ref={ref} className="py-20 bg-gray-50 dark:bg-gray-900">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div 
           className="text-center mb-16"
@@ -85,9 +95,9 @@ export default function Contact() {
           variants={fadeIn}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-3xl md:text-4xl font-bold font-sans mb-2">Get In Touch</h2>
+          <h2 className="text-3xl md:text-4xl font-bold font-sans mb-2 dark:text-white">Get In Touch</h2>
           <div className="w-20 h-1 bg-primary mx-auto mb-6"></div>
-          <p className="text-gray-600 max-w-3xl mx-auto">
+          <p className="text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
             Have a project in mind or want to discuss potential opportunities? I'd love to hear from you.
           </p>
         </motion.div>
@@ -101,10 +111,10 @@ export default function Contact() {
           >
             <form 
               onSubmit={form.handleSubmit(onSubmit)} 
-              className="bg-white p-8 rounded-xl shadow-lg"
+              className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg"
             >
               <div className="mb-6">
-                <Label htmlFor="name" className="block text-gray-900 font-medium mb-2">
+                <Label htmlFor="name" className="block text-gray-900 dark:text-white font-medium mb-2">
                   Your Name
                 </Label>
                 <Input
@@ -121,7 +131,7 @@ export default function Contact() {
               </div>
               
               <div className="mb-6">
-                <Label htmlFor="email" className="block text-gray-900 font-medium mb-2">
+                <Label htmlFor="email" className="block text-gray-900 dark:text-white font-medium mb-2">
                   Your Email
                 </Label>
                 <Input
@@ -139,7 +149,7 @@ export default function Contact() {
               </div>
               
               <div className="mb-6">
-                <Label htmlFor="subject" className="block text-gray-900 font-medium mb-2">
+                <Label htmlFor="subject" className="block text-gray-900 dark:text-white font-medium mb-2">
                   Subject
                 </Label>
                 <Input
@@ -156,7 +166,7 @@ export default function Contact() {
               </div>
               
               <div className="mb-6">
-                <Label htmlFor="message" className="block text-gray-900 font-medium mb-2">
+                <Label htmlFor="message" className="block text-gray-900 dark:text-white font-medium mb-2">
                   Your Message
                 </Label>
                 <Textarea
@@ -190,16 +200,16 @@ export default function Contact() {
             transition={{ duration: 0.6, delay: 0.3 }}
           >
             <div className="mb-10">
-              <h3 className="text-2xl font-bold font-sans mb-6 text-gray-900">Contact Information</h3>
+              <h3 className="text-2xl font-bold font-sans mb-6 text-gray-900 dark:text-white">Contact Information</h3>
               <div className="space-y-4">
                 <div className="flex items-start">
                   <div className="flex-shrink-0 bg-primary/10 p-3 rounded-full mr-4">
                     <Mail className="text-primary h-5 w-5" />
                   </div>
                   <div>
-                    <h4 className="font-medium text-gray-900">Email</h4>
-                    <a href="mailto:hello@johndoe.com" className="text-gray-600 hover:text-primary transition-colors duration-300">
-                      hello@johndoe.com
+                    <h4 className="font-medium text-gray-900 dark:text-white">Email</h4>
+                    <a href={`mailto:${contactEmail}`} className="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors duration-300">
+                      {contactEmail}
                     </a>
                   </div>
                 </div>
@@ -209,9 +219,12 @@ export default function Contact() {
                     <Phone className="text-primary h-5 w-5" />
                   </div>
                   <div>
-                    <h4 className="font-medium text-gray-900">Phone</h4>
-                    <a href="tel:+15551234567" className="text-gray-600 hover:text-primary transition-colors duration-300">
-                      +1 (555) 123-4567
+                    <h4 className="font-medium text-gray-900 dark:text-white">Phone</h4>
+                    <a 
+                      href={`tel:${contactPhone.replace(/\s/g, '')}`} 
+                      className="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors duration-300"
+                    >
+                      {contactPhone}
                     </a>
                   </div>
                 </div>
@@ -221,9 +234,9 @@ export default function Contact() {
                     <MapPin className="text-primary h-5 w-5" />
                   </div>
                   <div>
-                    <h4 className="font-medium text-gray-900">Location</h4>
-                    <p className="text-gray-600">
-                      San Francisco, California, USA
+                    <h4 className="font-medium text-gray-900 dark:text-white">Location</h4>
+                    <p className="text-gray-600 dark:text-gray-300">
+                      {location}
                     </p>
                   </div>
                 </div>
@@ -231,7 +244,7 @@ export default function Contact() {
             </div>
             
             <div>
-              <h3 className="text-2xl font-bold font-sans mb-6 text-gray-900">Follow Me</h3>
+              <h3 className="text-2xl font-bold font-sans mb-6 text-gray-900 dark:text-white">Follow Me</h3>
               <div className="flex space-x-5">
                 {socialLinks.map((item) => {
                   const Icon = item.icon;

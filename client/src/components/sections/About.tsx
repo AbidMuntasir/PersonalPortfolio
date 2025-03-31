@@ -7,9 +7,10 @@ import {
   location,
   education,
   experience,
-  resumeLink,
-  profileImage
+  resumeLink
 } from "@/lib/personal-info";
+// Direct import of the profile image
+import profileImage from "../../lib/photo.png";
 
 export default function About() {
   const { ref, inView } = useIntersectionObserver({ threshold: 0.1, triggerOnce: true });

@@ -75,32 +75,9 @@ export default function Admin() {
     visible: { opacity: 1, y: 0 },
   };
 
-  const handleBackToHome = () => {
-    setLocation('/');
-  };
-
   if (!isClient) {
     return null;
   }
-
-  return (
-    <div className="container mx-auto p-6">
-      <div className="flex justify-between items-center mb-6">
-        <Button 
-          variant="outline" 
-          onClick={handleBackToHome}
-          className="flex items-center gap-2"
-        >
-          <ArrowLeft className="h-4 w-4" /> Back to Homepage
-        </Button>
-        <Button 
-          variant="destructive" 
-          onClick={handleLogout} 
-          disabled={isLoggingOut}
-        >
-          Logout
-        </Button>
-      </div>
 
   return (
     <div className="container mx-auto px-4 py-12">

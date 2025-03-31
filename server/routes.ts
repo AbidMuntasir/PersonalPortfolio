@@ -21,6 +21,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
     console.error('Error checking contact form status:', error);
   }
 
+  // API endpoint to get all messages
+  app.get("/api/messages", async (req, res) => {
+    try {
+      const messages = await storage.getMessages();
+      res.status(200).json({ 
+        success: true, 
+        messages: messages 
+      });
+    } catch (error) {
+      console.error("Error retrieving messages:", error);
+      res.status(500).json({ 
+        success: false, 
+        message: "Failed to retrieve messages" 
+      });
+    }
+  });
+
   // Handle contact form submissions
   app.post("/api/contact", async (req, res) => {
     try {

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
-import { Menu, X, Sun, Moon } from "lucide-react";
+import { Menu, X, Sun, Moon, Lock } from "lucide-react";
 import { useTheme } from "@/hooks/use-theme";
 import { name } from "@/lib/personal-info";
 import { motion } from "framer-motion";
@@ -24,6 +24,7 @@ export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeLink, setActiveLink] = useState("home");
   const { theme, toggleTheme } = useTheme();
+  const [location] = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -106,6 +107,21 @@ export default function Header() {
             </nav>
             
             {/* Theme Toggle Button */}
+            {/* Admin Link */}
+            <Link 
+              to="/admin"
+              className={cn(
+                "flex items-center text-sm font-medium py-1 px-3 rounded transition-colors duration-300",
+                location === "/admin"
+                  ? "bg-primary/10 text-primary" 
+                  : "text-muted-foreground hover:text-primary hover:bg-primary/5"
+              )}
+            >
+              <Lock className="h-4 w-4 mr-1" />
+              Admin
+            </Link>
+            
+            {/* Theme Toggle Button */}
             <motion.button
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
@@ -183,6 +199,22 @@ export default function Header() {
                 {link.name}
               </a>
             ))}
+            
+            <Link
+              to="/admin"
+              className={cn(
+                "font-medium transition-colors duration-300 py-2 border-l-2 flex items-center",
+                location === "/admin"
+                  ? "text-primary border-primary pl-3" 
+                  : "text-muted-foreground hover:text-primary border-transparent hover:border-primary/50 hover:pl-3"
+              )}
+              onClick={() => {
+                setMobileMenuOpen(false);
+              }}
+            >
+              <Lock className="h-4 w-4 mr-2" />
+              Admin
+            </Link>
           </div>
         </motion.nav>
       )}

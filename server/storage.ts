@@ -84,6 +84,39 @@ export class MemStorage implements IStorage {
       isAdmin: true,
       createdAt
     });
+    
+    // Add sample blog posts
+    const blog1Id = this.currentBlogId++;
+    const blog1CreatedAt = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(); // 7 days ago
+    const blog1UpdatedAt = blog1CreatedAt;
+    this.blogs.set(blog1Id, {
+      id: blog1Id,
+      title: "Getting Started with Data Analysis in Python",
+      slug: "getting-started-with-data-analysis-python",
+      content: "Python has become the go-to language for data analysis and data science. In this blog post, we'll explore the fundamental libraries and techniques to get started with data analysis in Python.\n\nFirst, let's look at the essential libraries:\n\n1. **NumPy** - For numerical operations and multi-dimensional arrays\n2. **Pandas** - For data manipulation and analysis\n3. **Matplotlib** - For data visualization\n4. **Seaborn** - For statistical data visualization\n\nLet's start with a simple example of loading and exploring data with Pandas:\n\n```python\nimport pandas as pd\n\n# Load data from a CSV file\ndf = pd.read_csv('data.csv')\n\n# Display the first few rows\nprint(df.head())\n\n# Get basic statistics\nprint(df.describe())\n\n# Check for missing values\nprint(df.isnull().sum())\n```\n\nThis simple code helps you understand the structure of your data, identify missing values, and get a statistical summary.\n\nIn future posts, we'll dive deeper into data cleaning, visualization, and applying machine learning algorithms to extract insights from data.",
+      excerpt: "Learn the essentials of data analysis with Python, focusing on key libraries like NumPy, Pandas, Matplotlib, and Seaborn with practical examples.",
+      tags: "Python,Data Analysis,Pandas,Beginner",
+      coverImage: "https://images.unsplash.com/photo-1507842217343-583bb7270b66?q=80&w=2400&auto=format&fit=crop",
+      published: true,
+      createdAt: blog1CreatedAt,
+      updatedAt: blog1UpdatedAt
+    });
+    
+    const blog2Id = this.currentBlogId++;
+    const blog2CreatedAt = new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(); // 3 days ago
+    const blog2UpdatedAt = blog2CreatedAt;
+    this.blogs.set(blog2Id, {
+      id: blog2Id,
+      title: "Web Scraping Techniques for Data Collection",
+      slug: "web-scraping-techniques-data-collection",
+      content: "Web scraping is a powerful technique for gathering data from websites when APIs aren't available. In this post, we'll explore ethical web scraping practices and the tools you can use.\n\n## Ethical Web Scraping Guidelines\n\n1. Always check a website's robots.txt file and terms of service\n2. Implement reasonable request rates to avoid overwhelming servers\n3. Identify your scraper with a proper user-agent\n4. Cache results when possible to minimize requests\n\n## Popular Python Web Scraping Libraries\n\n### BeautifulSoup\nBeautifulSoup is a popular library for parsing HTML and XML documents. It creates a parse tree for parsed pages that can be used to extract data.\n\n```python\nimport requests\nfrom bs4 import BeautifulSoup\n\nurl = 'https://example.com'\nresponse = requests.get(url)\nsoup = BeautifulSoup(response.text, 'html.parser')\n\n# Find all links\nlinks = soup.find_all('a')\nfor link in links:\n    print(link.get('href'))\n```\n\n### Scrapy\nScrapy is a full-featured web crawling framework for Python that provides all the tools needed to efficiently extract data from websites, process it, and store it.\n\n### Selenium\nSelenium allows you to automate browser actions, making it perfect for scraping dynamic websites that load content using JavaScript.\n\nIn my next post, I'll share a real-world project that combines web scraping with data analysis to extract valuable insights.",
+      excerpt: "Discover ethical web scraping techniques and tools for effective data collection, with examples using BeautifulSoup, Scrapy, and Selenium in Python.",
+      tags: "Web Scraping,Python,Data Collection,BeautifulSoup",
+      coverImage: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=2400&auto=format&fit=crop",
+      published: true,
+      createdAt: blog2CreatedAt,
+      updatedAt: blog2UpdatedAt
+    });
   }
 
   // User related methods
@@ -157,11 +190,17 @@ export class MemStorage implements IStorage {
   
   async createBlog(blogData: InsertBlog & { createdAt: string, updatedAt: string }): Promise<Blog> {
     const id = this.currentBlogId++;
+    // Set default values for optional fields
     const published = blogData.published === undefined ? false : blogData.published;
+    const tags = blogData.tags === undefined ? null : blogData.tags;
+    const coverImage = blogData.coverImage === undefined ? null : blogData.coverImage;
+    
     const blog: Blog = { 
       ...blogData, 
       id,
-      published
+      published,
+      tags,
+      coverImage
     };
     this.blogs.set(id, blog);
     return blog;

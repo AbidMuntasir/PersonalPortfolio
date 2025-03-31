@@ -1,90 +1,14 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <title>Auth Debug</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 30px; }
-        button { padding: 8px 15px; margin: 5px; cursor: pointer; }
-        pre { background: #f4f4f4; padding: 10px; border-radius: 5px; }
-        .output { margin-top: 20px; }
-    </style>
-</head>
-<body>
-    <h1>Authentication Debug</h1>
-    
-    <div>
-        <button id="login">Login</button>
-        <button id="check">Check Session</button>
-        <button id="admin">Get Admin Messages</button>
-        <button id="logout">Logout</button>
-    </div>
-    
-    <div class="output">
-        <h3>Output:</h3>
-        <pre id="output">Click a button to test...</pre>
-    </div>
-
-    <script>
-        document.getElementById('login').addEventListener('click', async () => {
-            try {
-                const response = await fetch('/api/login', {
-                    method: 'POST',
-                    credentials: 'include',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        username: 'admin',
-                        password: 'password123'
-                    })
-                });
-                
-                const data = await response.json();
-                document.getElementById('output').textContent = JSON.stringify(data, null, 2);
-            } catch (error) {
-                document.getElementById('output').textContent = 'Error: ' + error.message;
-            }
-        });
-
-        document.getElementById('check').addEventListener('click', async () => {
-            try {
-                const response = await fetch('/api/session', {
-                    credentials: 'include'
-                });
-                
-                const data = await response.json();
-                document.getElementById('output').textContent = JSON.stringify(data, null, 2);
-            } catch (error) {
-                document.getElementById('output').textContent = 'Error: ' + error.message;
-            }
-        });
-
-        document.getElementById('admin').addEventListener('click', async () => {
-            try {
-                const response = await fetch('/api/admin/messages', {
-                    credentials: 'include'
-                });
-                
-                const data = await response.json();
-                document.getElementById('output').textContent = JSON.stringify(data, null, 2);
-            } catch (error) {
-                document.getElementById('output').textContent = 'Error: ' + error.message;
-            }
-        });
-
-        document.getElementById('logout').addEventListener('click', async () => {
-            try {
-                const response = await fetch('/api/logout', {
-                    method: 'POST',
-                    credentials: 'include'
-                });
-                
-                const data = await response.json();
-                document.getElementById('output').textContent = JSON.stringify(data, null, 2);
-            } catch (error) {
-                document.getElementById('output').textContent = 'Error: ' + error.message;
-            }
-        });
-    </script>
-</body>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Abid Muntasir - Python Data Specialist Portfolio" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>Abid Muntasir | Portfolio</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
 </html>

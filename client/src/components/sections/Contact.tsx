@@ -14,6 +14,7 @@ import { Label } from "@/components/ui/label";
 import { insertMessageSchema } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
 import { contactEmail, contactPhone, location, socialLinks as personalSocialLinks } from "@/lib/personal-info";
+import { EmailStatusAlert } from "@/components/ui/email-status";
 
 const contactFormSchema = insertMessageSchema.extend({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -62,14 +63,14 @@ export default function Contact() {
     onSuccess: () => {
       toast({
         title: "Message sent!",
-        description: "Thanks for your message. I'll get back to you soon.",
+        description: "Your message has been saved. Thanks for reaching out!",
         variant: "default",
       });
       form.reset();
     },
     onError: (error) => {
       toast({
-        title: "Error sending message",
+        title: "Error saving message",
         description: error.message || "Please try again later.",
         variant: "destructive",
       });
@@ -115,6 +116,7 @@ export default function Contact() {
               onSubmit={form.handleSubmit(onSubmit)} 
               className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700"
             >
+              <EmailStatusAlert />
               <motion.div 
                 className="mb-6"
                 initial={{ opacity: 0, y: 10 }}

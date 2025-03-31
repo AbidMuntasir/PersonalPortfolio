@@ -13,16 +13,12 @@ const themeSchema = z.object({
 });
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Verify email service connection on startup
+  // Check contact form status on startup
   try {
-    const emailVerification = await verifyEmailConnection();
-    if (emailVerification.success) {
-      console.log('Email service status: Connected and ready to send messages');
-    } else {
-      console.log(`Email service status: Not connected - ${emailVerification.error}`);
-    }
+    const formStatus = await verifyEmailConnection();
+    console.log('Contact form status:', formStatus.message);
   } catch (error) {
-    console.error('Error verifying email connection:', error);
+    console.error('Error checking contact form status:', error);
   }
 
   // Handle contact form submissions
@@ -41,19 +37,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Send email notification
       try {
-        // First check if email service is connected
-        const emailVerification = await verifyEmailConnection();
-        
-        if (emailVerification.success) {
-          await sendContactNotification(savedMessage);
-          console.log('Email notification sent successfully');
-        } else {
-          console.warn(`Skipping email notification - email service not connected: ${emailVerification.error}`);
-          // We still return success as the message was saved in the database
-        }
+        // Store the message but don't worry about email sending
+        await sendContactNotification(savedMessage);
+        console.log('Contact form message processed successfully');
       } catch (emailError) {
-        console.error('Failed to send email notification:', emailError);
-        // We continue even if the email fails - the message is already saved
+        console.error('Error processing message:', emailError);
+        // We continue even if there's an error - the message is already saved in the database
       }
       
       res.status(201).json({ success: true, message: "Message sent successfully" });
@@ -74,24 +63,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // API endpoint to check email connection
+  // API endpoint to check contact form status
   app.get("/api/email/check", async (req, res) => {
     try {
-      const verification = await verifyEmailConnection();
+      const status = await verifyEmailConnection();
+      console.log('Contact form status check:', status.message);
+      
       res.status(200).json({
         success: true,
-        connected: verification.success,
-        message: verification.success 
-          ? "Email service is connected and ready to send messages" 
-          : `Email service is not connected: ${verification.error}`,
-        errorDetails: verification.errorDetails
+        message: status.message
       });
     } catch (error) {
-      console.error("Error checking email connection:", error);
+      console.error("Error checking contact form status:", error);
       res.status(500).json({
         success: false,
-        connected: false,
-        message: "Failed to check email connection"
+        message: "Failed to check contact form status"
       });
     }
   });

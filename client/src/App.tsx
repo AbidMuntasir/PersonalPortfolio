@@ -8,6 +8,7 @@ import AllProjects from "@/pages/AllProjects";
 import Admin from "@/pages/Admin";
 import Login from "@/pages/Login";
 import { ThemeProvider } from "@/hooks/use-theme";
+import { AuthProvider } from "@/hooks/use-auth";
 
 function Router() {
   return (
@@ -25,8 +26,10 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
-        <Router />
-        <Toaster />
+        <AuthProvider>
+          <Router />
+          <Toaster />
+        </AuthProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );

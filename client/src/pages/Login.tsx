@@ -1,29 +1,18 @@
 import { LoginForm } from "@/components/auth/LoginForm";
 import { useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { useLocation } from "wouter";
+import { useAuth } from "@/hooks/use-auth";
 
 export default function Login() {
   const [_, setLocation] = useLocation();
+  const { isAuthenticated, isLoading } = useAuth();
   
-  // Check if user is already logged in
-  const { data, isLoading } = useQuery({
-    queryKey: ["/api/session"],
-    queryFn: async () => {
-      const response = await fetch("/api/session");
-      if (!response.ok) {
-        throw new Error("Failed to check session");
-      }
-      return response.json();
-    },
-  });
-
   // If already authenticated, redirect to admin page
   useEffect(() => {
-    if (data && data.authenticated) {
+    if (isAuthenticated) {
       setLocation("/admin");
     }
-  }, [data, setLocation]);
+  }, [isAuthenticated, setLocation]);
 
   return (
     <div className="container mx-auto py-10 px-4 min-h-screen flex flex-col justify-center">

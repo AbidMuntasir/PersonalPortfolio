@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
-import { useQuery, useMutation } from '@tanstack/react-query';
-import { apiRequest, getQueryFn } from '@/lib/queryClient';
+import { useQuery } from '@tanstack/react-query';
 import { Message } from '@shared/schema';
 import { motion } from 'framer-motion';
 import { useToast } from '@/hooks/use-toast';
 import { useLocation } from 'wouter';
+import { useAuth } from '@/hooks/use-auth';
 import { 
   Table, 
   TableBody, 
@@ -21,53 +21,41 @@ import { Button } from '@/components/ui/button';
 import { LogOut } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
+interface MessagesResponse {
+  messages: Message[];
+}
+
 export default function Admin() {
   const { toast } = useToast();
   const [isClient, setIsClient] = useState(false);
   const [_, setLocation] = useLocation();
+  const { logout, isAuthenticated } = useAuth();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   
   useEffect(() => {
     setIsClient(true);
-  }, []);
-  
-  // Logout mutation
-  const logoutMutation = useMutation({
-    mutationFn: async () => {
-      const response = await apiRequest("POST", "/api/logout", undefined);
-      return response.json();
-    },
-    onSuccess: () => {
-      toast({
-        title: "Logged out successfully",
-        description: "You have been logged out of the admin area."
-      });
-      setLocation("/login");
-    },
-    onError: (error) => {
-      toast({
-        variant: "destructive",
-        title: "Logout Failed",
-        description: error instanceof Error ? error.message : "Failed to logout. Please try again.",
-      });
+    
+    // Redirect if not authenticated
+    if (isClient && !isAuthenticated) {
+      setLocation('/login');
     }
-  });
+  }, [isClient, isAuthenticated, setLocation]);
+  
+  const handleLogout = async () => {
+    try {
+      setIsLoggingOut(true);
+      await logout();
+    } catch (error) {
+      console.error("Logout error:", error);
+    } finally {
+      setIsLoggingOut(false);
+    }
+  };
 
-  const { data, isLoading, isError, error } = useQuery({
+  // Fetch messages
+  const { data, isLoading, isError, error } = useQuery<MessagesResponse>({
     queryKey: ['/api/admin/messages'],
-    queryFn: async () => {
-      const response = await fetch('/api/admin/messages', {
-        credentials: 'include'
-      });
-      if (!response.ok) {
-        if (response.status === 401) {
-          // Redirect to login if unauthorized
-          window.location.href = '/login';
-          throw new Error('Please login to view this page');
-        }
-        throw new Error('Failed to fetch messages');
-      }
-      return response.json();
-    },
+    enabled: isAuthenticated,
   });
 
   useEffect(() => {
@@ -97,11 +85,11 @@ export default function Admin() {
         <Button 
           variant="outline" 
           className="flex items-center gap-2" 
-          onClick={() => logoutMutation.mutate()}
-          disabled={logoutMutation.isPending}
+          onClick={handleLogout}
+          disabled={isLoggingOut}
         >
           <LogOut className="h-4 w-4" /> 
-          {logoutMutation.isPending ? "Logging out..." : "Logout"}
+          {isLoggingOut ? "Logging out..." : "Logout"}
         </Button>
       </div>
     

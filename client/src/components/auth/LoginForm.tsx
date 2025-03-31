@@ -7,8 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
-import { apiRequest } from "@/lib/queryClient";
 import { useLocation } from "wouter";
+import { useAuth } from "@/hooks/use-auth";
 
 const loginSchema = z.object({
   username: z.string().min(3, "Username must be at least 3 characters"),
@@ -18,9 +18,12 @@ const loginSchema = z.object({
 type LoginFormValues = z.infer<typeof loginSchema>;
 
 export function LoginForm() {
-  const [isLoading, setIsLoading] = useState(false);
+  const { login, isLoading: authLoading } = useAuth();
   const { toast } = useToast();
   const [_, setLocation] = useLocation();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  const isLoading = isSubmitting || authLoading;
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -31,36 +34,16 @@ export function LoginForm() {
   });
 
   const onSubmit = async (data: LoginFormValues) => {
-    setIsLoading(true);
+    setIsSubmitting(true);
     try {
-      const response = await apiRequest(
-        "POST",
-        "/api/login",
-        data
-      );
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.message || "Failed to login");
-      }
-
-      toast({
-        title: "Login Successful",
-        description: "You are now logged in.",
-      });
-
-      // Redirect to admin dashboard
+      await login(data.username, data.password);
+      // Redirect will be handled by the AuthProvider
       setLocation("/admin");
     } catch (error) {
-      console.error("Login error:", error);
-      toast({
-        variant: "destructive",
-        title: "Login Failed",
-        description: error instanceof Error ? error.message : "Failed to login. Please try again.",
-      });
+      // Error handling is done inside the login function of AuthProvider
+      console.error("Login submission error:", error);
     } finally {
-      setIsLoading(false);
+      setIsSubmitting(false);
     }
   };
 

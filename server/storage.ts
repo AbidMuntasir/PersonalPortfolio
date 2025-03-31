@@ -79,8 +79,8 @@ export class MemStorage implements IStorage {
     const createdAt = new Date().toISOString();
     this.users.set(adminId, {
       id: adminId,
-      username: 'yourNewUsername', // Change this to your desired username
-      password: 'yourNewPassword', // Change this to your desired password
+      username: 'Abid', // Change this to your desired username
+      password: '07928abid', // Change this to your desired password
       isAdmin: true,
       createdAt
     });

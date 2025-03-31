@@ -195,9 +195,8 @@ function ProjectsTab() {
   const [newProject, setNewProject] = useState<Partial<InsertProject>>({
     title: '',
     description: '',
-    technologies: '',
+    technologies: [],
     imageUrl: null,
-    category: '',
     demoUrl: null,
     repoUrl: null,
     featured: false,
@@ -221,9 +220,8 @@ function ProjectsTab() {
       setNewProject({
         title: '',
         description: '',
-        technologies: '',
+        technologies: [],
         imageUrl: null,
-        category: '',
         demoUrl: null,
         repoUrl: null,
         featured: false,
@@ -313,7 +311,6 @@ function ProjectsTab() {
       description: editingProject.description,
       technologies: editingProject.technologies,
       imageUrl: editingProject.imageUrl,
-      category: editingProject.category,
       demoUrl: editingProject.demoUrl,
       repoUrl: editingProject.repoUrl,
       featured: editingProject.featured,
@@ -383,7 +380,7 @@ function ProjectsTab() {
               <TableHeader>
                 <TableRow>
                   <TableHead>Title</TableHead>
-                  <TableHead>Category</TableHead>
+                  <TableHead>Technologies</TableHead>
                   <TableHead>Featured</TableHead>
                   <TableHead>Order</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
@@ -394,9 +391,13 @@ function ProjectsTab() {
                   <TableRow key={project.id} className="hover:bg-gray-50 dark:hover:bg-gray-800">
                     <TableCell className="font-medium">{project.title}</TableCell>
                     <TableCell>
-                      <Badge variant="outline" className="font-normal">
-                        {project.category}
-                      </Badge>
+                      <div className="flex flex-wrap gap-1">
+                        {Array.isArray(project.technologies) && project.technologies.map((tech, index) => (
+                          <Badge key={index} variant="outline" className="font-normal">
+                            {tech}
+                          </Badge>
+                        ))}
+                      </div>
                     </TableCell>
                     <TableCell>{project.featured ? "Yes" : "No"}</TableCell>
                     <TableCell>{project.order}</TableCell>
@@ -460,21 +461,13 @@ function ProjectsTab() {
               <Label htmlFor="technologies">Technologies</Label>
               <Input 
                 id="technologies" 
-                value={newProject.technologies} 
-                onChange={(e) => setNewProject({...newProject, technologies: e.target.value})}
+                value={Array.isArray(newProject.technologies) ? newProject.technologies.join(', ') : ''}
+                onChange={(e) => setNewProject({...newProject, technologies: e.target.value.split(',').map(t => t.trim()).filter(Boolean)})}
                 placeholder="React, Node, MongoDB, etc."
               />
             </div>
             
-            <div className="grid gap-2">
-              <Label htmlFor="category">Category</Label>
-              <Input 
-                id="category" 
-                value={newProject.category} 
-                onChange={(e) => setNewProject({...newProject, category: e.target.value})}
-                placeholder="Web Development, Mobile App, etc."
-              />
-            </div>
+
             
             <div className="grid gap-2">
               <Label htmlFor="imageUrl">Image URL</Label>
@@ -573,19 +566,12 @@ function ProjectsTab() {
                 <Label htmlFor="edit-technologies">Technologies</Label>
                 <Input 
                   id="edit-technologies" 
-                  value={editingProject.technologies} 
-                  onChange={(e) => setEditingProject({...editingProject, technologies: e.target.value})}
+                  value={Array.isArray(editingProject.technologies) ? editingProject.technologies.join(', ') : ''}
+                  onChange={(e) => setEditingProject({...editingProject, technologies: e.target.value.split(',').map(t => t.trim()).filter(Boolean)})}
                 />
               </div>
               
-              <div className="grid gap-2">
-                <Label htmlFor="edit-category">Category</Label>
-                <Input 
-                  id="edit-category" 
-                  value={editingProject.category} 
-                  onChange={(e) => setEditingProject({...editingProject, category: e.target.value})}
-                />
-              </div>
+
               
               <div className="grid gap-2">
                 <Label htmlFor="edit-imageUrl">Image URL</Label>

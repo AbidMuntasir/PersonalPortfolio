@@ -9,7 +9,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { useToast } from "@/hooks/use-toast";
 import { useLocation } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
-import { Eye, EyeOff } from 'react-icons/go'; // Import Eye and EyeOff icons
+import { HiEye as Eye, HiEyeSlash as EyeOff } from 'react-icons/hi2'; // Import Eye and EyeOff icons
 
 
 const loginSchema = z.object({

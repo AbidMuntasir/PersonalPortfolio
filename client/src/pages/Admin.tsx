@@ -848,7 +848,6 @@ function SkillsTab() {
               <TableHeader>
                 <TableRow>
                   <TableHead>Name</TableHead>
-                  <TableHead>Category</TableHead>
                   <TableHead>Level</TableHead>
                   <TableHead>Icon</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
@@ -858,11 +857,6 @@ function SkillsTab() {
                 {skills.map((skill: Skill) => (
                   <TableRow key={skill.id} className="hover:bg-gray-50 dark:hover:bg-gray-800">
                     <TableCell className="font-medium">{skill.name}</TableCell>
-                    <TableCell>
-                      <Badge variant="outline" className="font-normal">
-                        {skill.category}
-                      </Badge>
-                    </TableCell>
                     <TableCell>{skill.level}%</TableCell>
                     <TableCell>{skill.iconName || "—"}</TableCell>
                     <TableCell className="text-right">

@@ -12,7 +12,7 @@ export default function Skills() {
   };
 
   return (
-    <section id="skills" ref={ref} className="py-20 bg-gray-50">
+    <section id="skills" ref={ref} className="py-20 bg-gray-50 dark:bg-gray-800">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div 
           className="text-center mb-16"
@@ -21,9 +21,9 @@ export default function Skills() {
           variants={fadeIn}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-3xl md:text-4xl font-bold font-sans mb-2">My Skills</h2>
+          <h2 className="text-3xl md:text-4xl font-bold font-sans mb-2 text-gray-900 dark:text-white">My Skills</h2>
           <div className="w-20 h-1 bg-primary mx-auto mb-6"></div>
-          <p className="text-gray-600 max-w-3xl mx-auto">
+          <p className="text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
             I've worked with a variety of technologies throughout my career. Here's a snapshot of my technical expertise.
           </p>
         </motion.div>
@@ -35,7 +35,7 @@ export default function Skills() {
             variants={fadeIn}
             transition={{ duration: 0.6 }}
           >
-            <h3 className="text-xl font-bold font-sans mb-6">Frontend Development</h3>
+            <h3 className="text-xl font-bold font-sans mb-6 text-gray-900 dark:text-white">Frontend Development</h3>
             
             {frontendSkills.map((skill, index) => (
               <motion.div 
@@ -46,12 +46,12 @@ export default function Skills() {
                 transition={{ duration: 0.8, delay: 0.1 * index }}
               >
                 <div className="flex justify-between mb-2">
-                  <span className="font-medium text-gray-900">{skill.name}</span>
-                  <span className="text-gray-600">{skill.percentage}%</span>
+                  <span className="font-medium text-gray-900 dark:text-white">{skill.name}</span>
+                  <span className="text-gray-600 dark:text-gray-300">{skill.percentage}%</span>
                 </div>
                 <Progress 
                   value={inView ? skill.percentage : 0} 
-                  className="h-2 bg-gray-200" 
+                  className="h-2 bg-gray-200 dark:bg-gray-600" 
                 />
               </motion.div>
             ))}
@@ -63,7 +63,7 @@ export default function Skills() {
             variants={fadeIn}
             transition={{ duration: 0.6, delay: 0.3 }}
           >
-            <h3 className="text-xl font-bold font-sans mb-6">Backend Development</h3>
+            <h3 className="text-xl font-bold font-sans mb-6 text-gray-900 dark:text-white">Backend Development</h3>
             
             {backendSkills.map((skill, index) => (
               <motion.div 
@@ -74,12 +74,12 @@ export default function Skills() {
                 transition={{ duration: 0.8, delay: 0.1 * index }}
               >
                 <div className="flex justify-between mb-2">
-                  <span className="font-medium text-gray-900">{skill.name}</span>
-                  <span className="text-gray-600">{skill.percentage}%</span>
+                  <span className="font-medium text-gray-900 dark:text-white">{skill.name}</span>
+                  <span className="text-gray-600 dark:text-gray-300">{skill.percentage}%</span>
                 </div>
                 <Progress 
                   value={inView ? skill.percentage : 0} 
-                  className="h-2 bg-gray-200" 
+                  className="h-2 bg-gray-200 dark:bg-gray-600" 
                 />
               </motion.div>
             ))}
@@ -98,13 +98,13 @@ export default function Skills() {
             return (
               <motion.div 
                 key={tech.name} 
-                className="bg-white p-4 rounded-lg shadow-md text-center"
+                className="bg-white dark:bg-gray-700 p-4 rounded-lg shadow-md text-center"
                 initial={{ opacity: 0, y: 20 }}
                 animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                 transition={{ duration: 0.4, delay: 0.1 * index }}
               >
                 <Icon className={`mx-auto h-10 w-10 mb-3 ${tech.iconClass}`} />
-                <p className="font-medium">{tech.name}</p>
+                <p className="font-medium text-gray-900 dark:text-white">{tech.name}</p>
               </motion.div>
             );
           })}

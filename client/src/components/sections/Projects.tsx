@@ -15,7 +15,7 @@ export default function Projects() {
   };
 
   return (
-    <section id="projects" ref={ref} className="py-20 bg-white">
+    <section id="projects" ref={ref} className="py-20 bg-white dark:bg-gray-900">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div 
           className="text-center mb-16"
@@ -24,9 +24,9 @@ export default function Projects() {
           variants={fadeIn}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-3xl md:text-4xl font-bold font-sans mb-2">My Projects</h2>
+          <h2 className="text-3xl md:text-4xl font-bold font-sans mb-2 text-gray-900 dark:text-white">My Projects</h2>
           <div className="w-20 h-1 bg-primary mx-auto mb-6"></div>
-          <p className="text-gray-600 max-w-3xl mx-auto">
+          <p className="text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
             Here are some of my recent projects. Each one presented unique challenges and opportunities for growth.
           </p>
         </motion.div>
@@ -35,7 +35,7 @@ export default function Projects() {
           {projects.map((project, index) => (
             <motion.div 
               key={project.title}
-              className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+              className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
               initial="hidden"
               animate={inView ? "visible" : "hidden"}
               variants={fadeIn}
@@ -56,8 +56,8 @@ export default function Projects() {
                 </div>
               </div>
               <div className="p-6">
-                <h3 className="text-xl font-bold font-sans mb-2 text-gray-900">{project.title}</h3>
-                <p className="text-gray-600 mb-4">{project.description}</p>
+                <h3 className="text-xl font-bold font-sans mb-2 text-gray-900 dark:text-white">{project.title}</h3>
+                <p className="text-gray-600 dark:text-gray-300 mb-4">{project.description}</p>
                 <div className="flex flex-wrap gap-2 mb-6">
                   {project.technologies.map((tech) => (
                     <Badge key={tech.name} variant="outline" className={tech.class}>
@@ -66,11 +66,11 @@ export default function Projects() {
                   ))}
                 </div>
                 <div className="flex justify-between">
-                  <a href={project.demoLink} className="text-primary hover:text-blue-700 font-medium flex items-center" target="_blank" rel="noopener noreferrer">
+                  <a href={project.demoLink} className="text-primary hover:text-primary/80 font-medium flex items-center" target="_blank" rel="noopener noreferrer">
                     <span>{project.demoText}</span>
                     <ExternalLink className="ml-1 h-4 w-4" />
                   </a>
-                  <a href={project.codeLink} className="text-primary hover:text-blue-700 font-medium flex items-center" target="_blank" rel="noopener noreferrer">
+                  <a href={project.codeLink} className="text-primary hover:text-primary/80 font-medium flex items-center" target="_blank" rel="noopener noreferrer">
                     <span>Source Code</span>
                     <Github className="ml-1 h-4 w-4" />
                   </a>

@@ -33,7 +33,7 @@ interface AuthRequest extends Request {
   user?: {
     id: number;
     username: string;
-    isAdmin: boolean;
+    is_admin: boolean;
   };
 }
 
@@ -56,7 +56,7 @@ const requireAdmin = async (req: Request, res: Response, next: NextFunction) => 
       return res.status(401).json({ success: false, message: "Unauthorized - User not found" });
     }
 
-    if (!user.isAdmin) {
+    if (!user.is_admin) {
       return res.status(403).json({ success: false, message: "Forbidden - Admin access required" });
     }
 
@@ -64,7 +64,7 @@ const requireAdmin = async (req: Request, res: Response, next: NextFunction) => 
     (req as AuthRequest).user = {
       id: user.id,
       username: user.username,
-      isAdmin: user.isAdmin
+      is_admin: user.is_admin
     };
 
     next();
@@ -101,7 +101,14 @@ router.post("/login", async (req, res) => {
         return res.status(500).json({ message: 'Session error' });
       }
       req.session.userId = user.id;
-      res.json({ message: 'Login successful' });
+      res.json({ 
+        message: 'Login successful',
+        user: {
+          id: user.id,
+          username: user.username,
+          is_admin: user.is_admin
+        }
+      });
     } else {
       console.log('Invalid credentials');
       res.status(401).json({ message: 'Invalid credentials' });
@@ -168,7 +175,7 @@ export async function registerRoutes(app: Express, storage: IStorage): Promise<S
         user: {
           id: user.id,
           username: user.username,
-          isAdmin: user.isAdmin
+          is_admin: user.is_admin
         }
       });
     } catch (error) {
@@ -232,7 +239,7 @@ export async function registerRoutes(app: Express, storage: IStorage): Promise<S
         user: {
           id: user.id,
           username: user.username,
-          isAdmin: user.isAdmin
+          is_admin: user.is_admin
         }
       });
     } catch (error) {

@@ -7,7 +7,7 @@ import { useLocation } from 'wouter';
 type User = {
   id: number;
   username: string;
-  isAdmin: boolean;
+  is_admin: boolean;
 };
 
 type AuthContextType = {

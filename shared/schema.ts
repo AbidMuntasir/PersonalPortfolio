@@ -7,8 +7,8 @@ export const users = pgTable("users", {
   id: serial("id").primaryKey(),
   username: text("username").notNull().unique(),
   password: text("password").notNull(),
-  isAdmin: boolean("isAdmin").default(false).notNull(),
-  createdAt: text("createdAt").notNull(),
+  is_admin: boolean("is_admin").default(false).notNull(),
+  created_at: text("created_at").notNull(),
 });
 
 // Contact messages
@@ -59,7 +59,7 @@ export const skills = pgTable("skills", {
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
   password: true,
-  isAdmin: true,
+  is_admin: true,
 });
 
 export const insertMessageSchema = createInsertSchema(messages).pick({

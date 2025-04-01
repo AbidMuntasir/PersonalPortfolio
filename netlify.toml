@@ -26,5 +26,12 @@
 
 [functions]
   node_bundler = "esbuild"
-  external_node_modules = ["express-session"]
-  included_files = ["node_modules/**/*"] 
+  external_node_modules = [
+    "express",
+    "express-session",
+    "@neondatabase/serverless",
+    "drizzle-orm",
+    "zod",
+    "pg",
+    "connect-pg-simple"
+  ] 

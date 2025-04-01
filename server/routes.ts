@@ -44,12 +44,25 @@ const themeSchema = z.object({
 // Auth middleware - check if user is logged in and has admin rights
 const requireAdmin = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    console.log('Auth middleware - checking session:', {
+      hasSession: !!req.session,
+      userId: req.session?.userId
+    });
+
     if (!req.session.userId) {
+      console.log('No userId in session');
       return res.status(401).json({ success: false, message: "Unauthorized - Please log in" });
     }
 
     const user = await storage.getUser(req.session.userId);
+    console.log('User from database:', {
+      found: !!user,
+      isAdmin: user?.is_admin,
+      username: user?.username
+    });
+
     if (!user) {
+      console.log('User not found in database');
       req.session.destroy((err: Error | null) => {
         if (err) console.error("Error destroying invalid session:", err);
       });
@@ -57,6 +70,7 @@ const requireAdmin = async (req: Request, res: Response, next: NextFunction) => 
     }
 
     if (!user.is_admin) {
+      console.log('User is not an admin');
       return res.status(403).json({ success: false, message: "Forbidden - Admin access required" });
     }
 
@@ -67,6 +81,7 @@ const requireAdmin = async (req: Request, res: Response, next: NextFunction) => 
       is_admin: user.is_admin
     };
 
+    console.log('Auth successful, proceeding to route');
     next();
   } catch (error) {
     console.error("Auth middleware error:", error);
@@ -687,7 +702,13 @@ export async function registerRoutes(app: Express, storage: IStorage): Promise<S
   // Add admin protection to the messages endpoint
   app.get("/api/admin/messages", requireAdmin, async (req: AuthRequest, res) => {
     try {
-      console.log('Fetching messages for admin user:', req.user?.username);
+      console.log('Admin messages request received');
+      console.log('Session data:', { 
+        userId: req.session?.userId,
+        hasSession: !!req.session,
+        user: req.user 
+      });
+      
       const messages = await storage.getMessages();
       console.log(`Successfully retrieved ${messages.length} messages`);
       res.status(200).json({ 

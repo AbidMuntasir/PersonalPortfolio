@@ -60,17 +60,20 @@ export default function Admin() {
         const response = await fetch('/api/admin/messages', {
           credentials: 'include',
           headers: {
-            'Accept': 'application/json'
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
           }
         });
         
         if (!response.ok) {
           const errorData = await response.json();
+          console.error('Server response:', errorData);
           throw new Error(errorData.message || 'Failed to fetch messages');
         }
         
         const data = await response.json();
         if (!data.success) {
+          console.error('Server response data:', data);
           throw new Error(data.message || 'Failed to fetch messages');
         }
         
@@ -80,8 +83,9 @@ export default function Admin() {
         throw error;
       }
     },
-    enabled: isAuthenticated,
-    retry: 1
+    enabled: isAuthenticated && isClient,
+    retry: 1,
+    refetchOnWindowFocus: false
   });
 
   useEffect(() => {

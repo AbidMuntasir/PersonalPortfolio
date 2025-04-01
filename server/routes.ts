@@ -113,7 +113,8 @@ export async function registerRoutes(app: Express, storage: IStorage): Promise<S
       ssl: isProduction ? { rejectUnauthorized: false } : false
     },
     tableName: 'session',
-    createTableIfMissing: true
+    createTableIfMissing: true,
+    pruneSessionInterval: 60 // Cleanup old sessions every minute
   });
 
   // Configure session middleware
@@ -124,12 +125,14 @@ export async function registerRoutes(app: Express, storage: IStorage): Promise<S
     saveUninitialized: false,
     name: 'connect.sid',
     proxy: true,
+    rolling: true, // Refresh session with each request
     cookie: {
-      secure: false,
+      secure: true, // Always true since Netlify uses HTTPS
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000,
       sameSite: 'lax',
-      path: '/'
+      path: '/',
+      domain: process.env.COOKIE_DOMAIN // Will be undefined in development
     }
   });
 
@@ -139,11 +142,12 @@ export async function registerRoutes(app: Express, storage: IStorage): Promise<S
   // Log session configuration
   console.log('Session configuration:', {
     environment: process.env.NODE_ENV || 'development',
-    secure: false,
+    secure: true,
     store: 'postgresql',
     cookieName: 'connect.sid',
     proxy: true,
-    trustProxy: true
+    trustProxy: true,
+    domain: process.env.COOKIE_DOMAIN || 'default'
   });
 
   // Add a middleware to log cookie settings on each request
@@ -156,7 +160,13 @@ export async function registerRoutes(app: Express, storage: IStorage): Promise<S
         secure: req.secure,
         protocol: req.protocol,
         'x-forwarded-proto': req.get('x-forwarded-proto'),
-        'userId': req.session?.userId
+        'userId': req.session?.userId,
+        'headers': {
+          'cookie': req.headers.cookie,
+          'host': req.headers.host,
+          'origin': req.headers.origin,
+          'referer': req.headers.referer
+        }
       });
     }
     next();
@@ -236,7 +246,10 @@ export async function registerRoutes(app: Express, storage: IStorage): Promise<S
               userId: user.id,
               sessionID: req.sessionID,
               cookie: req.session.cookie,
-              session: req.session
+              session: req.session,
+              headers: {
+                'set-cookie': res.getHeader('set-cookie')
+              }
             });
 
             resolve();
@@ -249,7 +262,10 @@ export async function registerRoutes(app: Express, storage: IStorage): Promise<S
         userId: req.session.userId,
         sessionID: req.sessionID,
         session: req.session,
-        cookie: req.session.cookie
+        cookie: req.session.cookie,
+        headers: {
+          'set-cookie': res.getHeader('set-cookie')
+        }
       });
       
       res.status(200).json({ 

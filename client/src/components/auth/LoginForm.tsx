@@ -43,8 +43,12 @@ export function LoginForm() {
       // Redirect will be handled by the AuthProvider
       setLocation("/admin");
     } catch (error) {
-      // Error handling is done inside the login function of AuthProvider
       console.error("Login submission error:", error);
+      toast({
+        variant: "destructive",
+        title: "Login Failed",
+        description: error instanceof Error ? error.message : "Invalid username or password. Please try again.",
+      });
     } finally {
       setIsSubmitting(false);
     }

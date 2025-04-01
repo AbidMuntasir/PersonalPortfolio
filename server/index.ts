@@ -2,10 +2,7 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import session from "express-session";
-import memorystore from "memorystore";
-
-// Create MemoryStore constructor
-const MemoryStore = memorystore(session);
+import { PostgresStorage } from "./pg-storage";
 
 const app = express();
 app.use(express.json());
@@ -16,9 +13,6 @@ app.use(session({
   secret: process.env.SESSION_SECRET || 'portfolio-admin-secret',
   resave: false,
   saveUninitialized: false,
-  store: new MemoryStore({
-    checkPeriod: 86400000 // prune expired entries every 24h
-  }),
   cookie: { 
     secure: process.env.NODE_ENV === "production",
     maxAge: 24 * 60 * 60 * 1000 // 24 hours
@@ -56,7 +50,7 @@ app.use((req, res, next) => {
 });
 
 (async () => {
-  const server = await registerRoutes(app);
+  const server = await registerRoutes(app, new PostgresStorage());
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;

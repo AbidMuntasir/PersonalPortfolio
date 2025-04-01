@@ -98,14 +98,18 @@ const requireAdmin = async (req: Request, res: Response, next: NextFunction) => 
 // router.post("/login", async (req, res) => { ... });
 
 export async function registerRoutes(app: Express, storage: IStorage): Promise<Server> {
+  // Trust first proxy for session handling
+  app.set('trust proxy', 1);
+
   // Configure session middleware with memory store for testing
   const sessionMiddleware = session({
     secret: process.env.SESSION_SECRET || 'your-secret-key',
     resave: true,
     saveUninitialized: false,
     name: 'connect.sid', // Explicit cookie name
+    proxy: true, // Trust proxy headers
     cookie: {
-      secure: false, // Must be false for non-HTTPS
+      secure: process.env.NODE_ENV === 'production', // Only use secure in production
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
       sameSite: 'lax',
@@ -119,9 +123,10 @@ export async function registerRoutes(app: Express, storage: IStorage): Promise<S
   // Log session configuration in development
   if (process.env.NODE_ENV !== 'production') {
     console.log('Session configuration:', {
-      secure: false,
+      secure: process.env.NODE_ENV === 'production',
       store: 'memory',
-      cookieName: 'connect.sid'
+      cookieName: 'connect.sid',
+      proxy: true
     });
   }
 
@@ -173,30 +178,45 @@ export async function registerRoutes(app: Express, storage: IStorage): Promise<S
           message: "Session error. Please try again." 
         });
       }
-      
-      // Set session data and regenerate session
+
+      // Create a new promise to handle session regeneration and saving
       await new Promise<void>((resolve, reject) => {
-        req.session.regenerate((err) => {
-          if (err) {
-            console.error('Error regenerating session:', err);
-            reject(err);
+        // First regenerate the session
+        req.session.regenerate((regenerateErr) => {
+          if (regenerateErr) {
+            console.error('Error regenerating session:', regenerateErr);
+            reject(regenerateErr);
             return;
           }
+
+          // Set the user ID
           req.session.userId = user.id;
+
+          // Now save the session
           req.session.save((saveErr) => {
             if (saveErr) {
               console.error('Error saving session:', saveErr);
               reject(saveErr);
               return;
             }
-            console.log('Session data set:', { 
-              userId: user.id, 
+
+            console.log('Session data set:', {
+              userId: user.id,
               sessionID: req.sessionID,
-              cookie: req.session.cookie
+              cookie: req.session.cookie,
+              session: req.session
             });
+
             resolve();
           });
         });
+      });
+
+      // Double-check the session was saved correctly
+      console.log('Final session state:', {
+        userId: req.session.userId,
+        sessionID: req.sessionID,
+        session: req.session
       });
       
       res.status(200).json({ 

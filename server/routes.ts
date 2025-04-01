@@ -105,15 +105,27 @@ export async function registerRoutes(app: Express, storage: IStorage): Promise<S
   const isProduction = process.env.NODE_ENV === 'production';
   const isDevelopment = !isProduction;
 
+  // Initialize PostgreSQL session store
+  const PostgresqlStore = PgSession(session);
+  const sessionStore = new PostgresqlStore({
+    conObject: {
+      connectionString: process.env.DATABASE_URL,
+      ssl: isProduction ? { rejectUnauthorized: false } : false
+    },
+    tableName: 'session',
+    createTableIfMissing: true
+  });
+
   // Configure session middleware
   const sessionMiddleware = session({
+    store: sessionStore,
     secret: process.env.SESSION_SECRET || 'your-secret-key',
-    resave: true,
+    resave: false,
     saveUninitialized: false,
     name: 'connect.sid',
     proxy: true,
     cookie: {
-      secure: 'auto', // Let Express detect based on proxy headers
+      secure: false,
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000,
       sameSite: 'lax',
@@ -124,20 +136,11 @@ export async function registerRoutes(app: Express, storage: IStorage): Promise<S
   // Apply session middleware
   app.use(sessionMiddleware);
 
-  // Force cookie settings after session middleware
-  app.use((req, res, next) => {
-    if (req.session) {
-      // Force secure to false in development
-      req.session.cookie.secure = isDevelopment ? false : req.secure;
-    }
-    next();
-  });
-
   // Log session configuration
   console.log('Session configuration:', {
     environment: process.env.NODE_ENV || 'development',
-    secure: isDevelopment ? false : 'auto',
-    store: 'memory',
+    secure: false,
+    store: 'postgresql',
     cookieName: 'connect.sid',
     proxy: true,
     trustProxy: true
@@ -153,7 +156,7 @@ export async function registerRoutes(app: Express, storage: IStorage): Promise<S
         secure: req.secure,
         protocol: req.protocol,
         'x-forwarded-proto': req.get('x-forwarded-proto'),
-        'forced-secure': isDevelopment ? false : req.secure
+        'userId': req.session?.userId
       });
     }
     next();
@@ -221,12 +224,6 @@ export async function registerRoutes(app: Express, storage: IStorage): Promise<S
           // Set the user ID
           req.session.userId = user.id;
 
-          // Force cookie settings
-          req.session.cookie.secure = isDevelopment ? false : req.secure;
-          req.session.cookie.httpOnly = true;
-          req.session.cookie.sameSite = 'lax';
-          req.session.cookie.path = '/';
-
           // Now save the session
           req.session.save((saveErr) => {
             if (saveErr) {
@@ -239,10 +236,7 @@ export async function registerRoutes(app: Express, storage: IStorage): Promise<S
               userId: user.id,
               sessionID: req.sessionID,
               cookie: req.session.cookie,
-              session: req.session,
-              headers: {
-                'set-cookie': res.getHeader('set-cookie')
-              }
+              session: req.session
             });
 
             resolve();
@@ -255,10 +249,7 @@ export async function registerRoutes(app: Express, storage: IStorage): Promise<S
         userId: req.session.userId,
         sessionID: req.sessionID,
         session: req.session,
-        cookie: req.session.cookie,
-        headers: {
-          'set-cookie': res.getHeader('set-cookie')
-        }
+        cookie: req.session.cookie
       });
       
       res.status(200).json({ 

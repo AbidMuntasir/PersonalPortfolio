@@ -95,16 +95,8 @@ const requireAdmin = async (req: Request, res: Response, next: NextFunction) => 
 // router.post("/login", async (req, res) => { ... });
 
 export async function registerRoutes(app: Express, storage: IStorage): Promise<Server> {
-  // Configure session middleware with PostgreSQL store
-  const db = await getDb();
-  const pgStore = pgSession(session);
-  
+  // Configure session middleware
   app.use(session({
-    store: new pgStore({
-      pool: db,
-      tableName: 'sessions',
-      createTableIfMissing: true
-    }),
     secret: process.env.SESSION_SECRET || 'your-secret-key',
     resave: false,
     saveUninitialized: false,
@@ -112,22 +104,9 @@ export async function registerRoutes(app: Express, storage: IStorage): Promise<S
       secure: process.env.NODE_ENV === 'production',
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
-      sameSite: 'lax',
-      path: '/',
-      domain: process.env.NODE_ENV === 'production' ? '.netlify.app' : undefined
-    },
-    name: 'portfolio.sid'
+      sameSite: 'lax'
+    }
   }));
-
-  // Log session configuration in development
-  if (process.env.NODE_ENV !== 'production') {
-    console.log('Session configuration:', {
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      store: 'postgres',
-      domain: process.env.NODE_ENV === 'production' ? '.netlify.app' : undefined
-    });
-  }
 
   // Check contact form status on startup
   try {
@@ -178,43 +157,7 @@ export async function registerRoutes(app: Express, storage: IStorage): Promise<S
         });
       }
       
-      // Set session data and save
       req.session.userId = user.id;
-      await new Promise<void>((resolve, reject) => {
-        req.session.save((err) => {
-          if (err) {
-            console.error('Error saving session:', err);
-            reject(err);
-          } else {
-            console.log('Session saved successfully:', { 
-              userId: user.id,
-              sessionID: req.sessionID 
-            });
-            resolve();
-          }
-        });
-      });
-      
-      // Set cookie explicitly with same options as session middleware
-      res.cookie('portfolio.sid', req.sessionID, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
-        path: '/',
-        domain: process.env.NODE_ENV === 'production' ? '.netlify.app' : undefined,
-        maxAge: 24 * 60 * 60 * 1000 // 24 hours
-      });
-      
-      // Log cookie details in development
-      if (process.env.NODE_ENV !== 'production') {
-        console.log('Setting cookie:', {
-          name: 'portfolio.sid',
-          value: req.sessionID,
-          domain: process.env.NODE_ENV === 'production' ? '.netlify.app' : undefined,
-          path: '/',
-          secure: process.env.NODE_ENV === 'production'
-        });
-      }
       
       res.status(200).json({ 
         success: true, 

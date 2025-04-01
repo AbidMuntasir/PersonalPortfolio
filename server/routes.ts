@@ -155,6 +155,7 @@ export async function registerRoutes(app: Express, storage: IStorage): Promise<S
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
       sameSite: 'lax',
       path: '/',
+      domain: process.env.NODE_ENV === 'production' ? '.netlify.app' : undefined
     },
     name: 'portfolio.sid'
   }));
@@ -164,7 +165,8 @@ export async function registerRoutes(app: Express, storage: IStorage): Promise<S
     console.log('Session configuration:', {
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
-      store: 'postgres'
+      store: 'postgres',
+      domain: process.env.NODE_ENV === 'production' ? '.netlify.app' : undefined
     });
   }
 
@@ -234,14 +236,26 @@ export async function registerRoutes(app: Express, storage: IStorage): Promise<S
         });
       });
       
-      // Set cookie explicitly
+      // Set cookie explicitly with same options as session middleware
       res.cookie('portfolio.sid', req.sessionID, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
         path: '/',
+        domain: process.env.NODE_ENV === 'production' ? '.netlify.app' : undefined,
         maxAge: 24 * 60 * 60 * 1000 // 24 hours
       });
+      
+      // Log cookie details in development
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('Setting cookie:', {
+          name: 'portfolio.sid',
+          value: req.sessionID,
+          domain: process.env.NODE_ENV === 'production' ? '.netlify.app' : undefined,
+          path: '/',
+          secure: process.env.NODE_ENV === 'production'
+        });
+      }
       
       res.status(200).json({ 
         success: true, 

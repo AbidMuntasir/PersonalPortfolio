@@ -2,14 +2,21 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import session from "express-session";
+import pgSession from "connect-pg-simple";
 import { PostgresStorage } from "./pg-storage";
+import { sessionPool } from "./db";
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// Configure session middleware
+// Configure session middleware with PostgreSQL store
 app.use(session({
+  store: new (pgSession(session))({
+    pool: sessionPool,
+    tableName: 'sessions',
+    createTableIfMissing: true
+  }),
   secret: process.env.SESSION_SECRET || 'portfolio-admin-secret',
   resave: false,
   saveUninitialized: false,
@@ -19,8 +26,8 @@ app.use(session({
     maxAge: 24 * 60 * 60 * 1000, // 24 hours
     httpOnly: true
   },
-  name: 'sessionId', // Add a specific name for the session cookie
-  proxy: true // Trust the reverse proxy
+  name: 'sessionId',
+  proxy: true
 }));
 
 app.use((req, res, next) => {

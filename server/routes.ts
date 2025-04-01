@@ -101,17 +101,21 @@ export async function registerRoutes(app: Express, storage: IStorage): Promise<S
   // Trust first proxy for session handling
   app.set('trust proxy', 1);
 
+  // Determine environment and cookie settings
+  const isProduction = process.env.NODE_ENV === 'production';
+  const isDevelopment = !isProduction;
+
   // Configure session middleware with memory store for testing
   const sessionMiddleware = session({
     secret: process.env.SESSION_SECRET || 'your-secret-key',
     resave: true,
     saveUninitialized: false,
-    name: 'connect.sid', // Explicit cookie name
-    proxy: true, // Trust proxy headers
+    name: 'connect.sid',
+    proxy: true,
     cookie: {
-      secure: process.env.NODE_ENV === 'production', // Only use secure in production
+      secure: false, // Force to false for now to debug
       httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+      maxAge: 24 * 60 * 60 * 1000,
       sameSite: 'lax',
       path: '/'
     }
@@ -120,15 +124,30 @@ export async function registerRoutes(app: Express, storage: IStorage): Promise<S
   // Apply session middleware
   app.use(sessionMiddleware);
 
-  // Log session configuration in development
-  if (process.env.NODE_ENV !== 'production') {
-    console.log('Session configuration:', {
-      secure: process.env.NODE_ENV === 'production',
-      store: 'memory',
-      cookieName: 'connect.sid',
-      proxy: true
-    });
-  }
+  // Log session configuration
+  console.log('Session configuration:', {
+    environment: process.env.NODE_ENV || 'development',
+    secure: false,
+    store: 'memory',
+    cookieName: 'connect.sid',
+    proxy: true,
+    trustProxy: true
+  });
+
+  // Add a middleware to log cookie settings on each request
+  app.use((req, res, next) => {
+    if (isDevelopment) {
+      console.log('Request cookie settings:', {
+        sessionID: req.sessionID,
+        hasSession: !!req.session,
+        cookie: req.session?.cookie,
+        secure: req.secure,
+        protocol: req.protocol,
+        'x-forwarded-proto': req.get('x-forwarded-proto')
+      });
+    }
+    next();
+  });
 
   // Check contact form status on startup
   try {
@@ -192,6 +211,12 @@ export async function registerRoutes(app: Express, storage: IStorage): Promise<S
           // Set the user ID
           req.session.userId = user.id;
 
+          // Explicitly set cookie options
+          req.session.cookie.secure = false;
+          req.session.cookie.httpOnly = true;
+          req.session.cookie.sameSite = 'lax';
+          req.session.cookie.path = '/';
+
           // Now save the session
           req.session.save((saveErr) => {
             if (saveErr) {
@@ -204,7 +229,10 @@ export async function registerRoutes(app: Express, storage: IStorage): Promise<S
               userId: user.id,
               sessionID: req.sessionID,
               cookie: req.session.cookie,
-              session: req.session
+              session: req.session,
+              headers: {
+                'set-cookie': res.getHeader('set-cookie')
+              }
             });
 
             resolve();
@@ -216,7 +244,11 @@ export async function registerRoutes(app: Express, storage: IStorage): Promise<S
       console.log('Final session state:', {
         userId: req.session.userId,
         sessionID: req.sessionID,
-        session: req.session
+        session: req.session,
+        cookie: req.session.cookie,
+        headers: {
+          'set-cookie': res.getHeader('set-cookie')
+        }
       });
       
       res.status(200).json({ 

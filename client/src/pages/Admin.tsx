@@ -56,15 +56,32 @@ export default function Admin() {
   const { data, isLoading, isError, error } = useQuery<MessagesResponse>({
     queryKey: ['/api/admin/messages'],
     queryFn: async () => {
-      const response = await fetch('/api/admin/messages', {
-        credentials: 'include'
-      });
-      if (!response.ok) {
-        throw new Error('Failed to fetch messages');
+      try {
+        const response = await fetch('/api/admin/messages', {
+          credentials: 'include',
+          headers: {
+            'Accept': 'application/json'
+          }
+        });
+        
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || 'Failed to fetch messages');
+        }
+        
+        const data = await response.json();
+        if (!data.success) {
+          throw new Error(data.message || 'Failed to fetch messages');
+        }
+        
+        return data;
+      } catch (error) {
+        console.error('Error fetching messages:', error);
+        throw error;
       }
-      return response.json();
     },
     enabled: isAuthenticated,
+    retry: 1
   });
 
   useEffect(() => {

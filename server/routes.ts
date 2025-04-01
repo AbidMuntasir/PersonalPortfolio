@@ -687,7 +687,9 @@ export async function registerRoutes(app: Express, storage: IStorage): Promise<S
   // Add admin protection to the messages endpoint
   app.get("/api/admin/messages", requireAdmin, async (req: AuthRequest, res) => {
     try {
+      console.log('Fetching messages for admin user:', req.user?.username);
       const messages = await storage.getMessages();
+      console.log(`Successfully retrieved ${messages.length} messages`);
       res.status(200).json({ 
         success: true, 
         messages: messages 
@@ -696,7 +698,8 @@ export async function registerRoutes(app: Express, storage: IStorage): Promise<S
       console.error("Error retrieving messages:", error);
       res.status(500).json({ 
         success: false, 
-        message: "Failed to retrieve messages" 
+        message: "Failed to retrieve messages",
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   });

@@ -99,22 +99,29 @@ const requireAdmin = async (req: Request, res: Response, next: NextFunction) => 
 
 export async function registerRoutes(app: Express, storage: IStorage): Promise<Server> {
   // Configure session middleware with memory store for testing
-  app.use(session({
+  const sessionMiddleware = session({
     secret: process.env.SESSION_SECRET || 'your-secret-key',
     resave: true,
     saveUninitialized: false,
+    name: 'connect.sid', // Explicit cookie name
     cookie: {
-      secure: false, // Set to false to work in development and production
+      secure: false, // Must be false for non-HTTPS
       httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000 // 24 hours
+      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+      sameSite: 'lax',
+      path: '/'
     }
-  }));
+  });
+
+  // Apply session middleware
+  app.use(sessionMiddleware);
 
   // Log session configuration in development
   if (process.env.NODE_ENV !== 'production') {
     console.log('Session configuration:', {
       secure: false,
-      store: 'memory'
+      store: 'memory',
+      cookieName: 'connect.sid'
     });
   }
 
@@ -167,9 +174,30 @@ export async function registerRoutes(app: Express, storage: IStorage): Promise<S
         });
       }
       
-      // Set session data
-      req.session.userId = user.id;
-      console.log('Session data set:', { userId: user.id, sessionID: req.sessionID });
+      // Set session data and regenerate session
+      await new Promise<void>((resolve, reject) => {
+        req.session.regenerate((err) => {
+          if (err) {
+            console.error('Error regenerating session:', err);
+            reject(err);
+            return;
+          }
+          req.session.userId = user.id;
+          req.session.save((saveErr) => {
+            if (saveErr) {
+              console.error('Error saving session:', saveErr);
+              reject(saveErr);
+              return;
+            }
+            console.log('Session data set:', { 
+              userId: user.id, 
+              sessionID: req.sessionID,
+              cookie: req.session.cookie
+            });
+            resolve();
+          });
+        });
+      });
       
       res.status(200).json({ 
         success: true, 

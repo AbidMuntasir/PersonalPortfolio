@@ -103,17 +103,21 @@ export async function registerRoutes(app: Express, storage: IStorage): Promise<S
     store: new PostgresqlStore({
       pool: db,
       tableName: 'sessions',
-      createTableIfMissing: true
+      createTableIfMissing: true,
+      pruneSessionInterval: 60 // Cleanup old sessions every minute
     }),
     secret: process.env.SESSION_SECRET || 'your-secret-key',
-    resave: false,
+    resave: true, // Changed to true to ensure session is saved
     saveUninitialized: false,
+    rolling: true, // Refresh session with each request
     cookie: {
       secure: process.env.NODE_ENV === 'production',
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
-      sameSite: 'lax'
-    }
+      sameSite: 'lax',
+      path: '/'
+    },
+    name: 'portfolio.sid'
   }));
 
   // Log session configuration in development
@@ -121,7 +125,9 @@ export async function registerRoutes(app: Express, storage: IStorage): Promise<S
     console.log('Session configuration:', {
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
-      store: 'postgres'
+      store: 'postgres',
+      resave: true,
+      rolling: true
     });
   }
 
@@ -174,7 +180,24 @@ export async function registerRoutes(app: Express, storage: IStorage): Promise<S
         });
       }
       
+      // Set session data and save
       req.session.userId = user.id;
+      
+      // Wait for session to be saved before sending response
+      await new Promise<void>((resolve, reject) => {
+        req.session.save((err) => {
+          if (err) {
+            console.error('Error saving session:', err);
+            reject(err);
+          } else {
+            console.log('Session saved successfully:', { 
+              userId: user.id,
+              sessionID: req.sessionID 
+            });
+            resolve();
+          }
+        });
+      });
       
       res.status(200).json({ 
         success: true, 

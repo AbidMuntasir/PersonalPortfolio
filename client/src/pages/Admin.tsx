@@ -55,6 +55,15 @@ export default function Admin() {
   // Fetch messages
   const { data, isLoading, isError, error } = useQuery<MessagesResponse>({
     queryKey: ['/api/admin/messages'],
+    queryFn: async () => {
+      const response = await fetch('/api/admin/messages', {
+        credentials: 'include'
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch messages');
+      }
+      return response.json();
+    },
     enabled: isAuthenticated,
   });
 
@@ -159,7 +168,7 @@ export default function Admin() {
                 {messages.map((message: Message) => (
                   <TableRow key={message.id} className="hover:bg-gray-50 dark:hover:bg-gray-800">
                     <TableCell className="font-medium whitespace-nowrap">
-                      {format(new Date(message.createdAt), 'MMM d, yyyy h:mm a')}
+                      {format(new Date(message.created_at), 'MMM d, yyyy h:mm a')}
                     </TableCell>
                     <TableCell>{message.name}</TableCell>
                     <TableCell>

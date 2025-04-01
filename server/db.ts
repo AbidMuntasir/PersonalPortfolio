@@ -37,7 +37,12 @@ const sessionPool = new Pool({
   connectionTimeoutMillis: 10000 // Increased timeout
 });
 
-// Export the database instance and connection promise
+// Export the connection promise and pool
 export const dbConnection = createConnection();
-export const db = drizzle(await dbConnection, { schema });
-export { sessionPool }; 
+export { sessionPool };
+
+// Export a function to get the database instance
+export async function getDb() {
+  const sql = await dbConnection;
+  return drizzle(sql, { schema });
+} 

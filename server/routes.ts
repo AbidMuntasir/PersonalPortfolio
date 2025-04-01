@@ -144,9 +144,22 @@ export async function registerRoutes(app: Express, storage: IStorage): Promise<S
       secure: process.env.NODE_ENV === 'production',
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
-      sameSite: 'lax'
-    }
+      sameSite: 'lax',
+      path: '/',
+      domain: process.env.NODE_ENV === 'production' ? '.netlify.app' : undefined
+    },
+    name: 'portfolio.sid', // Custom session cookie name
+    rolling: true // Extends session on activity
   }));
+
+  // Log session configuration in development
+  if (process.env.NODE_ENV !== 'production') {
+    console.log('Session configuration:', {
+      secure: process.env.NODE_ENV === 'production',
+      domain: process.env.NODE_ENV === 'production' ? '.netlify.app' : undefined,
+      sameSite: 'lax'
+    });
+  }
 
   // Check contact form status on startup
   try {
@@ -157,7 +170,7 @@ export async function registerRoutes(app: Express, storage: IStorage): Promise<S
   }
   
   // Authentication routes
-  app.post("/api/login", async (req: Request & { session: any }, res) => {
+  app.post("/api/login", async (req: Request, res) => {
     try {
       console.log('Login attempt received:', { username: req.body.username });
       const { username, password } = loginSchema.parse(req.body);
@@ -167,6 +180,7 @@ export async function registerRoutes(app: Express, storage: IStorage): Promise<S
       try {
         const db = await getDb();
         await db.execute(sql`SELECT 1`);
+        console.log('Database connection successful!');
       } catch (dbError) {
         console.error('Database connection error:', dbError);
         return res.status(500).json({ 
@@ -196,7 +210,19 @@ export async function registerRoutes(app: Express, storage: IStorage): Promise<S
         });
       }
       
+      // Explicitly save session
       req.session.userId = user.id;
+      await new Promise<void>((resolve, reject) => {
+        req.session.save((err) => {
+          if (err) {
+            console.error('Error saving session:', err);
+            reject(err);
+          } else {
+            console.log('Session saved successfully:', { userId: user.id });
+            resolve();
+          }
+        });
+      });
       
       res.status(200).json({ 
         success: true, 

@@ -5,8 +5,8 @@ import { Toaster } from "@/components/ui/toaster";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/Home";
 import AllProjects from "@/pages/AllProjects";
-import AdminLogin from "@/pages/admin/login";
-import AdminPanel from "@/pages/admin/index";
+import Admin from "@/pages/Admin";
+import Login from "@/pages/Login";
 import { ThemeProvider } from "@/hooks/use-theme";
 import { AuthProvider } from "@/hooks/use-auth";
 
@@ -22,8 +22,8 @@ function Router() {
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/projects" component={AllProjects} />
-      <Route path="/admin/login" component={AdminLogin} />
-      <Route path="/admin" component={AdminPanel} />
+      <Route path="/login" component={Login} />
+      <Route path="/admin" component={Admin} />
       <Route path="/404" component={NotFound} />
       <Route component={handle404} />
     </Switch>

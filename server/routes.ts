@@ -47,7 +47,9 @@ const requireAdmin = async (req: Request, res: Response, next: NextFunction) => 
   try {
     console.log('Auth middleware - checking session:', {
       hasSession: !!req.session,
-      userId: req.session?.userId
+      userId: req.session?.userId,
+      sessionID: req.sessionID,
+      session: req.session
     });
 
     if (!req.session.userId) {
@@ -59,7 +61,8 @@ const requireAdmin = async (req: Request, res: Response, next: NextFunction) => 
     console.log('User from database:', {
       found: !!user,
       isAdmin: user?.is_admin,
-      username: user?.username
+      username: user?.username,
+      userId: user?.id
     });
 
     if (!user) {
@@ -95,39 +98,23 @@ const requireAdmin = async (req: Request, res: Response, next: NextFunction) => 
 // router.post("/login", async (req, res) => { ... });
 
 export async function registerRoutes(app: Express, storage: IStorage): Promise<Server> {
-  // Configure session middleware with PostgreSQL store
-  const db = await getDb();
-  const PostgresqlStore = PgSession(session);
-  
+  // Configure session middleware with memory store for testing
   app.use(session({
-    store: new PostgresqlStore({
-      pool: db,
-      tableName: 'sessions',
-      createTableIfMissing: true,
-      pruneSessionInterval: 60 // Cleanup old sessions every minute
-    }),
     secret: process.env.SESSION_SECRET || 'your-secret-key',
-    resave: true, // Changed to true to ensure session is saved
+    resave: true,
     saveUninitialized: false,
-    rolling: true, // Refresh session with each request
     cookie: {
-      secure: process.env.NODE_ENV === 'production',
+      secure: false, // Set to false to work in development and production
       httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000, // 24 hours
-      sameSite: 'lax',
-      path: '/'
-    },
-    name: 'portfolio.sid'
+      maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    }
   }));
 
   // Log session configuration in development
   if (process.env.NODE_ENV !== 'production') {
     console.log('Session configuration:', {
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      store: 'postgres',
-      resave: true,
-      rolling: true
+      secure: false,
+      store: 'memory'
     });
   }
 
@@ -180,24 +167,9 @@ export async function registerRoutes(app: Express, storage: IStorage): Promise<S
         });
       }
       
-      // Set session data and save
+      // Set session data
       req.session.userId = user.id;
-      
-      // Wait for session to be saved before sending response
-      await new Promise<void>((resolve, reject) => {
-        req.session.save((err) => {
-          if (err) {
-            console.error('Error saving session:', err);
-            reject(err);
-          } else {
-            console.log('Session saved successfully:', { 
-              userId: user.id,
-              sessionID: req.sessionID 
-            });
-            resolve();
-          }
-        });
-      });
+      console.log('Session data set:', { userId: user.id, sessionID: req.sessionID });
       
       res.status(200).json({ 
         success: true, 

@@ -25,9 +25,28 @@
 
 [functions]
   node_bundler = "esbuild"
-  external_node_modules = ["express", "express-session", "@neondatabase/serverless", "drizzle-orm", "zod", "pg", "connect-pg-simple"]
+  external_node_modules = [
+    "express",
+    "express-session",
+    "@neondatabase/serverless",
+    "drizzle-orm",
+    "zod",
+    "pg",
+    "connect-pg-simple",
+    "serverless-http"
+  ]
   included_files = ["node_modules/**/*"]
 
 [functions.api]
   format = "esm"
-  external_node_modules = ["express", "express-session", "@neondatabase/serverless", "drizzle-orm", "zod", "pg", "connect-pg-simple"] 
+  external_node_modules = [
+    "express",
+    "express-session",
+    "@neondatabase/serverless",
+    "drizzle-orm",
+    "zod",
+    "pg",
+    "connect-pg-simple",
+    "serverless-http"
+  ]
+  included_files = ["node_modules/**/*"] 

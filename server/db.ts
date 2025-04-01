@@ -7,29 +7,37 @@ if (!process.env.DATABASE_URL) {
   throw new Error('DATABASE_URL environment variable is required');
 }
 
-// Initialize the database connection
-const sql = neon(process.env.DATABASE_URL, {
-  connectionTimeoutMillis: 5000,
-  ssl: true,
-  maxRetries: 3
-});
+// Initialize the database connection with retries
+const createConnection = async () => {
+  try {
+    const sql = neon(process.env.DATABASE_URL, {
+      connectionTimeoutMillis: 10000, // Increased timeout
+      ssl: true,
+      maxRetries: 5, // Increased retries
+      retryInterval: 1000, // 1 second between retries
+      retryOnError: true
+    });
 
-// Export the database instance
-export const db = drizzle(sql, { schema });
-
-// Create a separate pool for session store
-export const sessionPool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: true
-});
-
-// Test the connection and export a promise
-export const dbConnection = sql`SELECT 1`
-  .then(() => {
+    // Test the connection
+    await sql`SELECT 1`;
     console.log('Database connection successful!');
-    return true;
-  })
-  .catch((error) => {
-    console.error('Database connection failed:', error);
-    return false;
-  }); 
+    return sql;
+  } catch (error) {
+    console.error('Failed to create database connection:', error);
+    throw error;
+  }
+};
+
+// Create a connection pool for sessions
+const sessionPool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: true,
+  max: 20, // Maximum number of clients in the pool
+  idleTimeoutMillis: 30000, // Close idle clients after 30 seconds
+  connectionTimeoutMillis: 10000 // Increased timeout
+});
+
+// Export the database instance and connection promise
+export const dbConnection = createConnection();
+export const db = drizzle(await dbConnection, { schema });
+export { sessionPool }; 

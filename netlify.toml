@@ -1,7 +1,6 @@
 [build]
   command = "npm run build"
   publish = "dist"
-  functions = "netlify/functions"
 
 [build.environment]
   NODE_VERSION = "20"
@@ -12,7 +11,7 @@
   to = "/.netlify/functions/api/:splat"
   status = 200
   force = true
-  headers = {X-From = "Netlify"}
+  headers = { X-From = "Netlify" }
 
 # Handle client-side routing
 [[redirects]]
@@ -20,18 +19,11 @@
   to = "/index.html"
   status = 200
   force = true
-  conditions = {Not = [
-    {Path = ["/api/*", "/.netlify/*", "/assets/*", "/favicon.ico"]}
+  conditions = { Not = [
+    { Path = ["/api/*", "/.netlify/*", "/assets/*", "/favicon.ico", "/robots.txt", "/sitemap.xml"] }
   ]}
 
 [functions]
   node_bundler = "esbuild"
-  external_node_modules = [
-    "express",
-    "express-session",
-    "@neondatabase/serverless",
-    "drizzle-orm",
-    "zod",
-    "pg",
-    "connect-pg-simple"
-  ] 
+  external_node_modules = ["express", "express-session", "@neondatabase/serverless", "drizzle-orm", "zod", "pg", "connect-pg-simple"]
+  included_files = ["node_modules/**/*"] 

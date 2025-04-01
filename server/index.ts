@@ -18,15 +18,28 @@ app.use(session({
     secure: true,
     sameSite: 'lax',
     maxAge: 24 * 60 * 60 * 1000, // 24 hours
-    httpOnly: true
+    httpOnly: true,
+    path: '/'
   },
   name: 'sessionId',
   proxy: true,
+  rolling: true, // Reset the cookie maxAge on every response
   store: new (pgSession(session))({
     pool: sessionPool,
-    tableName: 'sessions'
+    tableName: 'sessions',
+    createTableIfMissing: true
   })
 }));
+
+// Add session error handling middleware
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+  if (err.code === 'ECONNREFUSED' || err.code === 'ETIMEDOUT') {
+    console.error('Session store connection error:', err);
+    // Continue without session for this request
+    return next();
+  }
+  next(err);
+});
 
 app.use((req, res, next) => {
   const start = Date.now();

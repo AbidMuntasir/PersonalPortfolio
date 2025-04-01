@@ -51,6 +51,17 @@ CREATE TABLE IF NOT EXISTS skills (
     icon_name TEXT
 );
 
+-- Create sessions table for connect-pg-simple
+CREATE TABLE IF NOT EXISTS sessions (
+  sid varchar NOT NULL COLLATE "default",
+  sess json NOT NULL,
+  expire timestamp(6) NOT NULL,
+  CONSTRAINT sessions_pkey PRIMARY KEY (sid)
+);
+
+-- Create index on expire column
+CREATE INDEX IF NOT EXISTS IDX_sessions_expire ON sessions (expire);
+
 -- Create default admin user
 INSERT INTO users (username, password, is_admin, created_at)
 VALUES ('Abid', '07928abid', true, CURRENT_TIMESTAMP::TEXT)

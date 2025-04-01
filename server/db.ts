@@ -7,13 +7,14 @@ if (!process.env.DATABASE_URL) {
   throw new Error('DATABASE_URL environment variable is required');
 }
 
-console.log('Connecting to database...');
+// Initialize the database connection
 const sql = neon(process.env.DATABASE_URL, {
   connectionTimeoutMillis: 5000,
   ssl: true,
   maxRetries: 3
 });
 
+// Export the database instance
 export const db = drizzle(sql, { schema });
 
 // Create a separate pool for session store
@@ -22,10 +23,13 @@ export const sessionPool = new Pool({
   ssl: true
 });
 
-// Test the connection
-sql`SELECT 1`.then(() => {
-  console.log('Database connection successful!');
-}).catch((error) => {
-  console.error('Database connection failed:', error);
-  // Don't throw here, let the application handle the error
-}); 
+// Test the connection and export a promise
+export const dbConnection = sql`SELECT 1`
+  .then(() => {
+    console.log('Database connection successful!');
+    return true;
+  })
+  .catch((error) => {
+    console.error('Database connection failed:', error);
+    return false;
+  }); 

@@ -6,5 +6,13 @@ if (!process.env.DATABASE_URL) {
   throw new Error('DATABASE_URL environment variable is required');
 }
 
+console.log('Connecting to database...');
 const sql = neon(process.env.DATABASE_URL);
-export const db = drizzle(sql, { schema }); 
+export const db = drizzle(sql, { schema });
+
+// Test the connection
+sql`SELECT 1`.then(() => {
+  console.log('Database connection successful!');
+}).catch((error) => {
+  console.error('Database connection failed:', error);
+}); 

@@ -63,7 +63,7 @@ export class PostgresStorage implements IStorage {
   async getMessages(): Promise<Message[]> {
     const db = await getDb();
     return await db.query.messages.findMany({
-      orderBy: desc(messages.createdAt)
+      orderBy: desc(messages.created_at)
     });
   }
 

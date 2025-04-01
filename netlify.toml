@@ -18,23 +18,12 @@
   from = "/*"
   to = "/index.html"
   status = 200
-  force = true
-  conditions = { Not = [
-    { Path = ["/api/*", "/.netlify/*", "/assets/*", "/favicon.ico", "/robots.txt", "/sitemap.xml"] }
-  ]}
+  exclude = ["/api/*", "/.netlify/*", "/assets/*"]
 
 [functions]
   node_bundler = "esbuild"
-  external_node_modules = [
-    "express",
-    "express-session",
-    "@neondatabase/serverless",
-    "drizzle-orm",
-    "zod",
-    "pg",
-    "connect-pg-simple",
-    "serverless-http"
-  ]
+  external_node_modules = ["express", "express-session", "@neondatabase/serverless", "drizzle-orm", "zod", "pg", "connect-pg-simple"]
+  included_files = ["node_modules/**/*"]
 
 [functions.api]
   format = "esm"

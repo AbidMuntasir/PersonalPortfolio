@@ -35,7 +35,6 @@
     "connect-pg-simple",
     "serverless-http"
   ]
-  included_files = ["node_modules/**/*"]
 
 [functions.api]
   format = "esm"
@@ -48,5 +47,4 @@
     "pg",
     "connect-pg-simple",
     "serverless-http"
-  ]
-  included_files = ["node_modules/**/*"] 
+  ] 

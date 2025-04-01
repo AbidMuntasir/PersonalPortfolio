@@ -8,7 +8,10 @@ import pgSession from 'connect-pg-simple';
 import { sessionPool } from '../../server/db';
 
 const app = express();
-app.use(express.json());
+
+// Basic middleware
+app.use(express.json({ limit: '1mb' }));
+app.use(express.urlencoded({ extended: false, limit: '1mb' }));
 
 // Configure session middleware with Postgres store
 app.use(session({
@@ -42,8 +45,24 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
   next(err);
 });
 
-// Register your routes with PostgreSQL storage
+// Register routes
 registerRoutes(app, new PostgresStorage());
 
 // Convert Express app to Netlify function
-export const handler: Handler = serverless(app); 
+const serverlessHandler = serverless(app);
+export const handler: Handler = async (event, context) => {
+  try {
+    const result = await serverlessHandler(event, context) as { statusCode?: number; body?: string; headers?: Record<string, string> };
+    return {
+      statusCode: result.statusCode || 200,
+      body: result.body,
+      headers: result.headers
+    };
+  } catch (error) {
+    console.error('Function error:', error);
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ message: 'Internal server error' })
+    };
+  }
+}; 

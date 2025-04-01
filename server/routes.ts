@@ -20,7 +20,7 @@ import { getDb } from "./db";
 import { users } from "../shared/schema";
 import { eq, and } from "drizzle-orm";
 import { sql } from "drizzle-orm";
-import pgSession from "connect-pg-simple";
+import PgSession from "connect-pg-simple";
 
 // Session data augmentation
 declare module "express-session" {
@@ -95,8 +95,16 @@ const requireAdmin = async (req: Request, res: Response, next: NextFunction) => 
 // router.post("/login", async (req, res) => { ... });
 
 export async function registerRoutes(app: Express, storage: IStorage): Promise<Server> {
-  // Configure session middleware
+  // Configure session middleware with PostgreSQL store
+  const db = await getDb();
+  const PostgresqlStore = PgSession(session);
+  
   app.use(session({
+    store: new PostgresqlStore({
+      pool: db,
+      tableName: 'sessions',
+      createTableIfMissing: true
+    }),
     secret: process.env.SESSION_SECRET || 'your-secret-key',
     resave: false,
     saveUninitialized: false,
@@ -107,6 +115,15 @@ export async function registerRoutes(app: Express, storage: IStorage): Promise<S
       sameSite: 'lax'
     }
   }));
+
+  // Log session configuration in development
+  if (process.env.NODE_ENV !== 'production') {
+    console.log('Session configuration:', {
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      store: 'postgres'
+    });
+  }
 
   // Check contact form status on startup
   try {

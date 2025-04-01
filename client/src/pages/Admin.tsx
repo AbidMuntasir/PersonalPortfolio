@@ -29,17 +29,17 @@ export default function Admin() {
   const { toast } = useToast();
   const [isClient, setIsClient] = useState(false);
   const [_, setLocation] = useLocation();
-  const { logout, isAuthenticated } = useAuth();
+  const { logout, isAuthenticated, isLoading: authLoading } = useAuth();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   
   useEffect(() => {
     setIsClient(true);
     
     // Redirect if not authenticated
-    if (isClient && !isAuthenticated) {
+    if (isClient && !isAuthenticated && !authLoading) {
       setLocation('/login');
     }
-  }, [isClient, isAuthenticated, setLocation]);
+  }, [isClient, isAuthenticated, authLoading, setLocation]);
   
   const handleLogout = async () => {
     try {
@@ -54,7 +54,7 @@ export default function Admin() {
 
   // Fetch messages
   const { data, isLoading, isError, error } = useQuery<MessagesResponse>({
-    queryKey: ['/api/admin/messages'],
+    queryKey: ['admin-messages'],
     queryFn: async () => {
       try {
         const response = await fetch('/api/admin/messages', {
@@ -83,7 +83,7 @@ export default function Admin() {
         throw error;
       }
     },
-    enabled: isAuthenticated && isClient,
+    enabled: isAuthenticated && isClient && !authLoading,
     retry: 1,
     refetchOnWindowFocus: false
   });

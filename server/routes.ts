@@ -135,6 +135,19 @@ router.post("/login", async (req, res) => {
 });
 
 export async function registerRoutes(app: Express, storage: IStorage): Promise<Server> {
+  // Configure session middleware
+  app.use(session({
+    secret: process.env.SESSION_SECRET || 'your-secret-key',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: process.env.NODE_ENV === 'production',
+      httpOnly: true,
+      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+      sameSite: 'lax'
+    }
+  }));
+
   // Check contact form status on startup
   try {
     const formStatus = await verifyEmailConnection();

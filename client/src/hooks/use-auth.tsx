@@ -10,115 +10,114 @@ type User = {
   is_admin: boolean;
 };
 
-type AuthContextType = {
+interface AuthContextType {
   user: User | null;
-  isLoading: boolean;
   isAuthenticated: boolean;
+  isLoading: boolean;
   login: (username: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
-};
+}
 
-const AuthContext = createContext<AuthContextType | null>(null);
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
-  const [_, setLocation] = useLocation();
   const queryClient = useQueryClient();
+  const [, setLocation] = useLocation();
 
-  interface SessionResponse {
-    authenticated: boolean;
-    user?: User;
-  }
-
-  // Check session status on mount
-  const { data: sessionData } = useQuery<SessionResponse>({
-    queryKey: ['/api/session'],
-    refetchOnWindowFocus: true,
+  // Check session status
+  const { data: sessionData, isLoading } = useQuery({
+    queryKey: ['session'],
+    queryFn: async () => {
+      const response = await fetch('/api/session', {
+        credentials: 'include',
+      });
+      if (!response.ok) {
+        throw new Error('Failed to check session');
+      }
+      return response.json();
+    },
+    retry: false,
   });
 
-  // Handle session data changes
-  useEffect(() => {
-    if (sessionData?.authenticated && sessionData?.user) {
-      setUser(sessionData.user);
-    } else {
-      setUser(null);
-    }
-    setIsLoading(false);
-  }, [sessionData]);
-
-  // Login function
-  const login = async (username: string, password: string) => {
-    try {
-      setIsLoading(true);
-      const response = await apiRequest(
-        'POST',
-        '/api/login',
-        { username, password }
-      );
-      
-      const result = await response.json();
-      
-      if (result.success) {
-        setUser(result.user);
-        queryClient.invalidateQueries({ queryKey: ['/api/session'] });
-        toast({
-          title: 'Login Successful',
-          description: 'You are now logged in.',
-        });
-        return result;
-      } else {
-        throw new Error(result.message || 'Login failed');
-      }
-    } catch (error) {
-      console.error('Login error:', error);
-      toast({
-        variant: 'destructive',
-        title: 'Login Failed',
-        description: error instanceof Error ? error.message : 'Failed to login. Please try again.',
+  const loginMutation = useMutation({
+    mutationFn: async (credentials: { username: string; password: string }) => {
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(credentials),
       });
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Login failed');
+      }
+
+      return response.json();
+    },
+    onSuccess: (data) => {
+      queryClient.setQueryData(['session'], {
+        authenticated: true,
+        user: data.user,
+      });
+      setLocation('/admin');
+      toast({
+        title: 'Success',
+        description: 'Logged in successfully',
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: 'Error',
+        description: error.message || 'Login failed',
+        variant: 'destructive',
+      });
+    },
+  });
+
+  const logoutMutation = useMutation({
+    mutationFn: async () => {
+      const response = await fetch('/api/logout', {
+        method: 'POST',
+        credentials: 'include',
+      });
+      if (!response.ok) {
+        throw new Error('Logout failed');
+      }
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.setQueryData(['session'], { authenticated: false, user: null });
+      setLocation('/');
+      toast({
+        title: 'Success',
+        description: 'Logged out successfully',
+      });
+    },
+    onError: () => {
+      toast({
+        title: 'Error',
+        description: 'Failed to logout',
+        variant: 'destructive',
+      });
+    },
+  });
+
+  const login = async (username: string, password: string) => {
+    await loginMutation.mutateAsync({ username, password });
   };
 
-  // Logout function
   const logout = async () => {
-    try {
-      setIsLoading(true);
-      const response = await apiRequest('POST', '/api/logout');
-      const result = await response.json();
-      
-      if (result.success) {
-        setUser(null);
-        queryClient.invalidateQueries();
-        toast({
-          title: 'Logged out successfully',
-          description: 'You have been logged out of the admin area.',
-        });
-        setLocation('/login');
-      } else {
-        throw new Error(result.message || 'Logout failed');
-      }
-    } catch (error) {
-      console.error('Logout error:', error);
-      toast({
-        variant: 'destructive',
-        title: 'Logout Failed',
-        description: error instanceof Error ? error.message : 'Failed to logout. Please try again.',
-      });
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
+    await logoutMutation.mutateAsync();
   };
 
   const value = {
-    user,
+    user: sessionData?.authenticated ? sessionData.user : null,
+    isAuthenticated: !!sessionData?.authenticated,
     isLoading,
-    isAuthenticated: !!user,
     login,
     logout,
   };
@@ -128,7 +127,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
 export function useAuth() {
   const context = useContext(AuthContext);
-  if (!context) {
+  if (context === undefined) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;

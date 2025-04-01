@@ -1,6 +1,7 @@
 [build]
   command = "npm run build"
   publish = "dist"
+  functions = "netlify/functions"
 
 [build.environment]
   NODE_VERSION = "20"
@@ -10,6 +11,7 @@
   from = "/api/*"
   to = "/.netlify/functions/api/:splat"
   status = 200
+  force = true
 
 # Handle client-side routing
 [[redirects]]
@@ -18,8 +20,9 @@
   status = 200
   force = true
   conditions = {Not = [
-    {Path = ["/api/*", "/.netlify/*", "/assets/*"]}
+    {Path = ["/api/*", "/.netlify/*", "/assets/*", "/favicon.ico"]}
   ]}
 
 [functions]
-  directory = "netlify/functions" 
+  node_bundler = "esbuild"
+  external_node_modules = ["express-session"] 

@@ -7,7 +7,11 @@ if (!process.env.DATABASE_URL) {
 }
 
 console.log('Connecting to database...');
-const sql = neon(process.env.DATABASE_URL);
+const sql = neon(process.env.DATABASE_URL, {
+  connectionTimeoutMillis: 5000,
+  ssl: true
+});
+
 export const db = drizzle(sql, { schema });
 
 // Test the connection
@@ -15,4 +19,5 @@ sql`SELECT 1`.then(() => {
   console.log('Database connection successful!');
 }).catch((error) => {
   console.error('Database connection failed:', error);
+  // Don't throw here, let the application handle the error
 }); 

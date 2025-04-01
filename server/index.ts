@@ -14,10 +14,13 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: { 
-    secure: true, // Always use secure cookies in production
+    secure: true,
     sameSite: 'lax',
-    maxAge: 24 * 60 * 60 * 1000 // 24 hours
-  }
+    maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    httpOnly: true
+  },
+  name: 'sessionId', // Add a specific name for the session cookie
+  proxy: true // Trust the reverse proxy
 }));
 
 app.use((req, res, next) => {

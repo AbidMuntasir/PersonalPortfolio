@@ -18,6 +18,7 @@ import { Router } from "express";
 import { getDb } from "./db";
 import { users } from "../shared/schema";
 import { eq, and } from "drizzle-orm";
+import { sql } from "drizzle-orm";
 
 // Session data augmentation
 declare module "express-session" {
@@ -128,6 +129,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Ensure database connection is working
       try {
+        const db = await getDb();
         await db.execute(sql`SELECT 1`);
       } catch (dbError) {
         console.error('Database connection error:', dbError);

@@ -105,7 +105,7 @@ export async function registerRoutes(app: Express, storage: IStorage): Promise<S
   const isProduction = process.env.NODE_ENV === 'production';
   const isDevelopment = !isProduction;
 
-  // Configure session middleware with memory store for testing
+  // Configure session middleware
   const sessionMiddleware = session({
     secret: process.env.SESSION_SECRET || 'your-secret-key',
     resave: true,
@@ -113,7 +113,7 @@ export async function registerRoutes(app: Express, storage: IStorage): Promise<S
     name: 'connect.sid',
     proxy: true,
     cookie: {
-      secure: false, // Force to false for now to debug
+      secure: 'auto', // Let Express detect based on proxy headers
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000,
       sameSite: 'lax',
@@ -124,10 +124,19 @@ export async function registerRoutes(app: Express, storage: IStorage): Promise<S
   // Apply session middleware
   app.use(sessionMiddleware);
 
+  // Force cookie settings after session middleware
+  app.use((req, res, next) => {
+    if (req.session) {
+      // Force secure to false in development
+      req.session.cookie.secure = isDevelopment ? false : req.secure;
+    }
+    next();
+  });
+
   // Log session configuration
   console.log('Session configuration:', {
     environment: process.env.NODE_ENV || 'development',
-    secure: false,
+    secure: isDevelopment ? false : 'auto',
     store: 'memory',
     cookieName: 'connect.sid',
     proxy: true,
@@ -143,7 +152,8 @@ export async function registerRoutes(app: Express, storage: IStorage): Promise<S
         cookie: req.session?.cookie,
         secure: req.secure,
         protocol: req.protocol,
-        'x-forwarded-proto': req.get('x-forwarded-proto')
+        'x-forwarded-proto': req.get('x-forwarded-proto'),
+        'forced-secure': isDevelopment ? false : req.secure
       });
     }
     next();
@@ -211,8 +221,8 @@ export async function registerRoutes(app: Express, storage: IStorage): Promise<S
           // Set the user ID
           req.session.userId = user.id;
 
-          // Explicitly set cookie options
-          req.session.cookie.secure = false;
+          // Force cookie settings
+          req.session.cookie.secure = isDevelopment ? false : req.secure;
           req.session.cookie.httpOnly = true;
           req.session.cookie.sameSite = 'lax';
           req.session.cookie.path = '/';

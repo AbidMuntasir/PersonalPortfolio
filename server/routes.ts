@@ -135,7 +135,7 @@ router.post("/login", async (req, res) => {
 });
 
 export async function registerRoutes(app: Express, storage: IStorage): Promise<Server> {
-  // Configure session middleware
+  // Configure session middleware with more secure settings
   app.use(session({
     secret: process.env.SESSION_SECRET || 'your-secret-key',
     resave: false,
@@ -146,17 +146,14 @@ export async function registerRoutes(app: Express, storage: IStorage): Promise<S
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
       sameSite: 'lax',
       path: '/',
-      domain: process.env.NODE_ENV === 'production' ? '.netlify.app' : undefined
     },
-    name: 'portfolio.sid', // Custom session cookie name
-    rolling: true // Extends session on activity
+    name: 'portfolio.sid'
   }));
 
   // Log session configuration in development
   if (process.env.NODE_ENV !== 'production') {
     console.log('Session configuration:', {
       secure: process.env.NODE_ENV === 'production',
-      domain: process.env.NODE_ENV === 'production' ? '.netlify.app' : undefined,
       sameSite: 'lax'
     });
   }
@@ -210,7 +207,7 @@ export async function registerRoutes(app: Express, storage: IStorage): Promise<S
         });
       }
       
-      // Explicitly save session
+      // Set session data and save
       req.session.userId = user.id;
       await new Promise<void>((resolve, reject) => {
         req.session.save((err) => {
@@ -218,10 +215,22 @@ export async function registerRoutes(app: Express, storage: IStorage): Promise<S
             console.error('Error saving session:', err);
             reject(err);
           } else {
-            console.log('Session saved successfully:', { userId: user.id });
+            console.log('Session saved successfully:', { 
+              userId: user.id,
+              sessionID: req.sessionID 
+            });
             resolve();
           }
         });
+      });
+      
+      // Set cookie explicitly
+      res.cookie('portfolio.sid', req.sessionID, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        path: '/',
+        maxAge: 24 * 60 * 60 * 1000 // 24 hours
       });
       
       res.status(200).json({ 

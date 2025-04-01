@@ -83,6 +83,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.log('Login attempt received:', { username: req.body.username });
       const { username, password } = loginSchema.parse(req.body);
       console.log('Validating user...');
+      
+      // Ensure database connection is working
+      try {
+        await db.execute(sql`SELECT 1`);
+      } catch (dbError) {
+        console.error('Database connection error:', dbError);
+        return res.status(500).json({ 
+          success: false, 
+          message: "Database connection error. Please try again later." 
+        });
+      }
+      
       const user = await storage.validateUser(username, password);
       
       if (!user) {
@@ -94,7 +106,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       console.log('User validated successfully:', { userId: user.id, username: user.username });
+      
       // Set user in session
+      if (!req.session) {
+        console.error('Session is not available');
+        return res.status(500).json({ 
+          success: false, 
+          message: "Session error. Please try again." 
+        });
+      }
+      
       req.session.userId = user.id;
       
       res.status(200).json({ 

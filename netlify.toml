@@ -12,6 +12,7 @@
   to = "/.netlify/functions/api/:splat"
   status = 200
   force = true
+  headers = {X-From = "Netlify"}
 
 # Handle client-side routing
 [[redirects]]
@@ -25,4 +26,5 @@
 
 [functions]
   node_bundler = "esbuild"
-  external_node_modules = ["express-session"] 
+  external_node_modules = ["express-session"]
+  included_files = ["node_modules/**/*"] 

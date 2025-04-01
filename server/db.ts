@@ -10,7 +10,8 @@ if (!process.env.DATABASE_URL) {
 console.log('Connecting to database...');
 const sql = neon(process.env.DATABASE_URL, {
   connectionTimeoutMillis: 5000,
-  ssl: true
+  ssl: true,
+  maxRetries: 3
 });
 
 export const db = drizzle(sql, { schema });

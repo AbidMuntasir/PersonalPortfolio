@@ -90,50 +90,9 @@ const requireAdmin = async (req: Request, res: Response, next: NextFunction) => 
   }
 };
 
-const router = Router();
-
-// Login route
-router.post("/login", async (req, res) => {
-  console.log('Login attempt received:', { username: req.body.username });
-  
-  try {
-    // Ensure database connection
-    const db = await getDb();
-    await db.execute(sql`SELECT 1`);
-    console.log('Database connection successful!');
-
-    console.log('Validating user...');
-    const user = await db.query.users.findFirst({
-      where: and(
-        eq(users.username, req.body.username),
-        eq(users.password, req.body.password)
-      )
-    });
-
-    if (user) {
-      console.log('User validated successfully:', { userId: user.id });
-      if (!req.session) {
-        console.error('Session not available');
-        return res.status(500).json({ message: 'Session error' });
-      }
-      req.session.userId = user.id;
-      res.json({ 
-        message: 'Login successful',
-        user: {
-          id: user.id,
-          username: user.username,
-          is_admin: user.is_admin
-        }
-      });
-    } else {
-      console.log('Invalid credentials');
-      res.status(401).json({ message: 'Invalid credentials' });
-    }
-  } catch (error) {
-    console.error('Login error:', error);
-    res.status(500).json({ message: 'Internal server error' });
-  }
-});
+// Remove the router and its login route since we're not using it
+// const router = Router();
+// router.post("/login", async (req, res) => { ... });
 
 export async function registerRoutes(app: Express, storage: IStorage): Promise<Server> {
   // Configure session middleware with PostgreSQL store

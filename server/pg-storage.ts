@@ -74,10 +74,13 @@ export class PostgresStorage implements IStorage {
     });
   }
 
-  async createMessage(message: InsertMessage): Promise<Message> {
+  async createMessage(message: InsertMessage & { createdAt: string }): Promise<Message> {
     const db = await getDb();
     const [newMessage] = await db.insert(messages)
-      .values(message)
+      .values({
+        ...message,
+        created_at: message.createdAt
+      })
       .returning();
     return newMessage;
   }

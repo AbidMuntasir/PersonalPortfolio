@@ -18,7 +18,7 @@ export const messages = pgTable("messages", {
   email: text("email").notNull(),
   subject: text("subject").notNull(),
   message: text("message").notNull(),
-  createdAt: text("createdAt").notNull(),
+  created_at: text("created_at").notNull(),
 });
 
 // Blog posts

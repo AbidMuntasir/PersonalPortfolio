@@ -80,16 +80,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Authentication routes
   app.post("/api/login", async (req: Request & { session: any }, res) => {
     try {
+      console.log('Login attempt received:', { username: req.body.username });
       const { username, password } = loginSchema.parse(req.body);
+      console.log('Validating user...');
       const user = await storage.validateUser(username, password);
       
       if (!user) {
+        console.log('Login failed: Invalid credentials');
         return res.status(401).json({ 
           success: false, 
           message: "Invalid username or password" 
         });
       }
       
+      console.log('User validated successfully:', { userId: user.id, username: user.username });
       // Set user in session
       req.session.userId = user.id;
       
@@ -102,6 +106,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       });
     } catch (error) {
+      console.error("Login error details:", error);
       if (error instanceof ZodError) {
         return res.status(400).json({ 
           success: false, 
@@ -110,7 +115,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
       
-      console.error("Login error:", error);
       res.status(500).json({ 
         success: false, 
         message: "Login failed. Please try again later." 

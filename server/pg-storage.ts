@@ -33,13 +33,26 @@ export class PostgresStorage implements IStorage {
   }
 
   async validateUser(username: string, password: string): Promise<User | null> {
-    const user = await db.query.users.findFirst({
-      where: and(
-        eq(users.username, username),
-        eq(users.password, password)
-      )
-    });
-    return user || null;
+    console.log('Validating user in database:', { username });
+    try {
+      const user = await db.query.users.findFirst({
+        where: and(
+          eq(users.username, username),
+          eq(users.password, password)
+        )
+      });
+      
+      if (user) {
+        console.log('User found:', { userId: user.id, username: user.username });
+      } else {
+        console.log('No user found with these credentials');
+      }
+      
+      return user || null;
+    } catch (error) {
+      console.error('Database error during user validation:', error);
+      throw error;
+    }
   }
 
   // Message related methods

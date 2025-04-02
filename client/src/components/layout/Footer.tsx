@@ -1,4 +1,4 @@
-import { Github, Linkedin, Twitter, Dribbble, Code, Database, LineChart } from "lucide-react";
+import { Github, Linkedin, Twitter, Dribbble, Code, Database, LineChart, BarChart2, Bot } from "lucide-react";
 import { motion } from "framer-motion";
 import { name, tagline, socialLinks as personalSocialLinks } from "@/lib/personal-info";
 
@@ -29,7 +29,9 @@ const socialLinks = personalSocialLinks.map(link => ({
 const footerSkills = [
   { name: "Web Scraping", icon: Code },
   { name: "Data Analysis", icon: LineChart },
-  { name: "Python", icon: Database }
+  { name: "Python", icon: Database },
+  { name: "Automation", icon: Bot },
+  { name: "Visualization", icon: BarChart2 }
 ];
 
 export default function Footer() {

@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Progress } from "@/components/ui/progress";
 import { useIntersectionObserver } from "@/hooks/use-intersection-observer";
-import { frontendSkills, backendSkills, technologies } from "@/lib/data";
+import { dataSkills, automationSkills, technologies } from "@/lib/data";
 
 export default function Skills() {
   const { ref, inView } = useIntersectionObserver({ threshold: 0.1, triggerOnce: true });
@@ -24,7 +24,7 @@ export default function Skills() {
           <h2 className="text-3xl md:text-4xl font-bold font-sans mb-2 text-gray-900 dark:text-white bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-purple-400 inline">My Skills</h2>
           <div className="w-20 h-1 bg-primary mx-auto mb-6"></div>
           <p className="text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-            I've worked with a variety of technologies throughout my career. Here's a snapshot of my technical expertise.
+            I've worked with a variety of data technologies and tools. Here's a snapshot of my technical expertise.
           </p>
         </motion.div>
         
@@ -36,9 +36,9 @@ export default function Skills() {
             transition={{ duration: 0.6 }}
             className="bg-white dark:bg-gray-700 p-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-300"
           >
-            <h3 className="text-xl font-bold font-sans mb-6 text-gray-900 dark:text-white">Frontend Development</h3>
+            <h3 className="text-xl font-bold font-sans mb-6 text-gray-900 dark:text-white">Data Analysis</h3>
             
-            {frontendSkills.map((skill, index) => (
+            {dataSkills.map((skill, index) => (
               <motion.div 
                 key={skill.name} 
                 className="mb-6 group cursor-pointer"
@@ -72,9 +72,9 @@ export default function Skills() {
             transition={{ duration: 0.6, delay: 0.3 }}
             className="bg-white dark:bg-gray-700 p-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-300"
           >
-            <h3 className="text-xl font-bold font-sans mb-6 text-gray-900 dark:text-white">Backend Development</h3>
+            <h3 className="text-xl font-bold font-sans mb-6 text-gray-900 dark:text-white">Automation & Scraping</h3>
             
-            {backendSkills.map((skill, index) => (
+            {automationSkills.map((skill, index) => (
               <motion.div 
                 key={skill.name} 
                 className="mb-6 group cursor-pointer"

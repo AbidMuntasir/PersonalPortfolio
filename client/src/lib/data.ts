@@ -3,102 +3,99 @@ import {
   Code, 
   Server, 
   Database,
-  Github
+  Github,
+  LineChart,
+  BarChart,
+  LayoutDashboard
 } from "lucide-react";
 
 import { 
-  SiJavascript, 
-  SiReact, 
-  SiNodedotjs, 
-  SiExpress, 
-  SiMongodb, 
-  SiPostgresql, 
+  SiPython,
+  SiPandas,
+  SiNumpy,
+  SiScikitlearn,
+  SiJupyter,
+  SiSelenium,
   SiDocker, 
   SiAmazonwebservices, 
-  SiGit, 
-  SiTypescript, 
-  SiVuedotjs, 
-  SiD3Dotjs
+  SiGit,
+  SiMicrosoftexcel
 } from "react-icons/si";
-import { FaHtml5, FaCss3Alt } from "react-icons/fa";
+import { FaRegChartBar, FaRobot } from "react-icons/fa";
 
 // Skills data
-export const frontendSkills = [
-  { name: "JavaScript", percentage: 95 },
-  { name: "React.js", percentage: 90 },
-  { name: "HTML/CSS", percentage: 98 },
-  { name: "TypeScript", percentage: 85 },
-  // To add more frontend skills, copy this format:
+export const dataSkills = [
+  { name: "Python", percentage: 95 },
+  { name: "Data Analysis", percentage: 90 },
+  { name: "Web Scraping", percentage: 88 },
+  { name: "Pandas", percentage: 92 },
+  // To add more data skills, copy this format:
   // { name: "Skill Name", percentage: 85 }, 
   // Percentage should be between 0-100
   
   // EXAMPLES - Remove comments to activate or modify as needed
-  // { name: "Vue.js", percentage: 80 },
-  // { name: "Tailwind CSS", percentage: 95 },
-  // { name: "Responsive Design", percentage: 90 },
+  // { name: "NumPy", percentage: 85 },
+  // { name: "Data Visualization", percentage: 90 },
+  // { name: "Jupyter Notebooks", percentage: 95 },
 ];
 
-export const backendSkills = [
-  { name: "Node.js", percentage: 92 },
-  { name: "Express", percentage: 88 },
-  { name: "MongoDB", percentage: 80 },
-  { name: "SQL", percentage: 85 },
-  // To add more backend skills, copy this format:
+export const automationSkills = [
+  { name: "Automated Reports", percentage: 88 },
+  { name: "Task Automation", percentage: 85 },
+  { name: "Selenium", percentage: 80 },
+  { name: "Beautiful Soup", percentage: 92 },
+  // To add more automation skills, copy this format:
   // { name: "Skill Name", percentage: 85 },
   // Percentage should be between 0-100
   
   // EXAMPLES - Remove comments to activate or modify as needed
-  // { name: "Python", percentage: 95 },
-  // { name: "Django", percentage: 88 },
-  // { name: "Flask", percentage: 85 },
-  // { name: "PostgreSQL", percentage: 90 },
-  // { name: "Docker", percentage: 75 },
+  // { name: "IFTTT", percentage: 75 },
+  // { name: "Zapier", percentage: 82 },
+  // { name: "GitHub Actions", percentage: 78 },
+  // { name: "Scheduled Tasks", percentage: 90 },
 ];
 
 /*
 Available technology icons from react-icons:
-- SiJavascript (JavaScript)
-- SiReact (React)
-- SiNodedotjs (Node.js)
-- SiExpress (Express)
-- SiMongodb (MongoDB)
-- SiPostgresql (PostgreSQL)
+- SiPython (Python)
+- SiPandas (Pandas)
+- SiNumpy (NumPy)
+- SiScikitlearn (Scikit-learn)
+- SiJupyter (Jupyter)
+- SiSelenium (Selenium)
 - SiDocker (Docker)
 - SiAmazonwebservices (AWS)
 - SiGit (Git)
-- SiTypescript (TypeScript)
-- SiVuedotjs (Vue.js)
-- SiD3Dotjs (D3.js)
-- FaHtml5 (HTML5)
-- FaCss3Alt (CSS3)
+- SiMicrosoftexcel (Microsoft Excel)
+- FaRegChartBar (Chart Bar)
+- FaRobot (Robot - for automation)
 
 For more icons, you can import others from:
 - react-icons/si (for SiIconName - branded/technology icons)
 - react-icons/fa (for FaIconName - FontAwesome icons)
-- lucide-react (for component icons like Cloud, Code, etc.)
+- lucide-react (for component icons like LineChart, Database, etc.)
 */
 
 export const technologies = [
-  { name: "React", icon: SiReact, iconClass: "text-blue-500" },
-  { name: "Node.js", icon: SiNodedotjs, iconClass: "text-green-600" },
-  { name: "AWS", icon: SiAmazonwebservices, iconClass: "text-orange-400" },
-  { name: "Docker", icon: SiDocker, iconClass: "text-blue-600" },
-  { name: "Git", icon: SiGit, iconClass: "text-gray-800" },
-  { name: "MongoDB", icon: SiMongodb, iconClass: "text-green-500" },
+  { name: "Python", icon: SiPython, iconClass: "text-blue-600" },
+  { name: "Pandas", icon: SiPandas, iconClass: "text-blue-500" },
+  { name: "NumPy", icon: SiNumpy, iconClass: "text-blue-700" },
+  { name: "Selenium", icon: SiSelenium, iconClass: "text-green-600" },
+  { name: "Jupyter", icon: SiJupyter, iconClass: "text-orange-500" },
+  { name: "Data Analysis", icon: LineChart, iconClass: "text-purple-600" },
   // To add a new technology, use this format:
   // { name: "Technology Name", icon: IconComponentName, iconClass: "text-color-shade" },
   // For icon colors, you can use Tailwind colors like:
   // text-blue-500, text-green-600, text-purple-700, text-red-500, etc.
   
   // EXAMPLES - Remove comments to activate or modify as needed
-  // { name: "JavaScript", icon: SiJavascript, iconClass: "text-yellow-500" },
-  // { name: "TypeScript", icon: SiTypescript, iconClass: "text-blue-700" },
-  // { name: "Vue.js", icon: SiVuedotjs, iconClass: "text-green-500" },
-  // { name: "PostgreSQL", icon: SiPostgresql, iconClass: "text-blue-800" },
-  // { name: "HTML5", icon: FaHtml5, iconClass: "text-orange-600" },
-  // { name: "CSS3", icon: FaCss3Alt, iconClass: "text-blue-500" },
-  // { name: "Express", icon: SiExpress, iconClass: "text-gray-800" },
-  // { name: "D3.js", icon: SiD3Dotjs, iconClass: "text-orange-500" },
+  // { name: "Scikit-learn", icon: SiScikitlearn, iconClass: "text-orange-600" },
+  // { name: "Excel", icon: SiMicrosoftexcel, iconClass: "text-green-700" },
+  // { name: "AWS", icon: SiAmazonwebservices, iconClass: "text-orange-400" },
+  // { name: "Git", icon: SiGit, iconClass: "text-gray-800" },
+  // { name: "Docker", icon: SiDocker, iconClass: "text-blue-600" },
+  // { name: "Automation", icon: FaRobot, iconClass: "text-gray-600" },
+  // { name: "Dashboards", icon: LayoutDashboard, iconClass: "text-purple-500" },
 ];
 
 // Projects data

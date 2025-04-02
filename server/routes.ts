@@ -64,7 +64,10 @@ const requireAdmin = async (req: Request, res: Response, next: NextFunction) => 
   try {
     // Get auth token from cookie
     const token = req.cookies.auth_token;
-    console.log('Auth middleware - checking token:', { hasToken: !!token });
+    console.log('Auth middleware - checking token:', { 
+      hasToken: !!token,
+      tokenLength: token ? token.length : 0
+    });
     
     if (!token) {
       console.log('No auth token in cookie');
@@ -79,7 +82,7 @@ const requireAdmin = async (req: Request, res: Response, next: NextFunction) => 
         process.env.JWT_SECRET || 'your-secret-key'
       ) as JwtPayload;
       
-      console.log('Token verified:', { 
+      console.log('Token verified successfully:', { 
         userId: decoded.userId, 
         username: decoded.username,
         isAdmin: decoded.isAdmin
@@ -761,17 +764,71 @@ export async function registerRoutes(app: Express, storage: IStorage): Promise<S
       console.log('Admin messages request received');
       console.log('User data:', { user: req.user });
       
+      // Attempt to get messages
       const messages = await storage.getMessages();
-      console.log(`Successfully retrieved ${messages.length} messages`);
-      res.status(200).json({ 
+      console.log(`Successfully retrieved ${messages.length} messages:`, {
+        preview: messages.length > 0 ? 
+          { 
+            firstMessage: {
+              id: messages[0].id,
+              name: messages[0].name,
+              email: messages[0].email,
+              created_at: messages[0].created_at
+            } 
+          } : 'No messages'
+      });
+      
+      return res.status(200).json({ 
         success: true, 
         messages: messages 
       });
     } catch (error) {
       console.error("Error retrieving messages:", error);
-      res.status(500).json({ 
+      return res.status(500).json({ 
         success: false, 
         message: "Failed to retrieve messages",
+        error: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  // Add a diagnostic endpoint for testing
+  app.get("/api/admin/diagnostic", requireAdmin, async (req: AuthRequest, res) => {
+    try {
+      console.log('Admin diagnostic endpoint called');
+      
+      // Check database connection
+      const db = await getDb();
+      await db.execute(sql`SELECT 1`);
+      console.log('Database connection successful in diagnostic endpoint');
+      
+      // Check if messages table exists and count records
+      const messagesCount = await db.execute(sql`SELECT COUNT(*) FROM messages`);
+      console.log('Messages count:', messagesCount.rows);
+      
+      // Try to fetch messages directly
+      const rawMessages = await db.execute(sql`SELECT * FROM messages LIMIT 5`);
+      console.log('Raw messages (first 5):', rawMessages.rows);
+      
+      // Try to fetch using storage
+      const messages = await storage.getMessages();
+      console.log(`Successfully retrieved ${messages.length} messages through storage`);
+      
+      // Return diagnostic info
+      return res.status(200).json({
+        success: true,
+        diagnostic: {
+          databaseConnection: true,
+          messagesCount: messagesCount.rows[0],
+          hasMessages: messages.length > 0,
+          sampleMessages: messages.slice(0, 2)
+        }
+      });
+    } catch (error) {
+      console.error("Diagnostic error:", error);
+      return res.status(500).json({
+        success: false,
+        message: "Diagnostic failed",
         error: error instanceof Error ? error.message : "Unknown error"
       });
     }

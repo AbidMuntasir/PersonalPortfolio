@@ -105,6 +105,9 @@ export async function registerRoutes(app: Express, storage: IStorage): Promise<S
   const isProduction = process.env.NODE_ENV === 'production';
   const isDevelopment = !isProduction;
 
+  // Get the domain from the environment or default to the Netlify domain
+  const cookieDomain = process.env.COOKIE_DOMAIN || '.netlify.app';
+
   // Initialize PostgreSQL session store
   const PostgresqlStore = PgSession(session);
   const sessionStore = new PostgresqlStore({
@@ -132,7 +135,7 @@ export async function registerRoutes(app: Express, storage: IStorage): Promise<S
       maxAge: 24 * 60 * 60 * 1000,
       sameSite: 'lax',
       path: '/',
-      domain: process.env.COOKIE_DOMAIN // Will be undefined in development
+      domain: cookieDomain // Set to .netlify.app to work across subdomains
     }
   });
 
@@ -147,7 +150,7 @@ export async function registerRoutes(app: Express, storage: IStorage): Promise<S
     cookieName: 'connect.sid',
     proxy: true,
     trustProxy: true,
-    domain: process.env.COOKIE_DOMAIN || 'default'
+    domain: cookieDomain
   });
 
   // Add a middleware to log cookie settings on each request
@@ -165,7 +168,8 @@ export async function registerRoutes(app: Express, storage: IStorage): Promise<S
           'cookie': req.headers.cookie,
           'host': req.headers.host,
           'origin': req.headers.origin,
-          'referer': req.headers.referer
+          'referer': req.headers.referer,
+          'x-forwarded-host': req.get('x-forwarded-host')
         }
       });
     }

@@ -23,7 +23,7 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeLink, setActiveLink] = useState("home");
-  const { theme, toggleTheme } = useTheme();
+  const { theme, toggleTheme, isColorSchemeForced } = useTheme();
   const [location] = useLocation();
 
   useEffect(() => {
@@ -71,7 +71,10 @@ export default function Header() {
             href="#home" 
             className="text-2xl font-bold font-sans text-foreground group"
           >
-            <span className="text-primary bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-purple-400">
+            <span 
+              className="text-primary bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-purple-400 dark:from-purple-400 dark:to-purple-200"
+              data-gradient-heading="true"
+            >
               {firstName}
             </span>
             <span className="group-hover:text-primary transition-colors duration-300"> {lastName}</span>

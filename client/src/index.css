@@ -96,4 +96,81 @@
   html.dark .shadow-xl {
     @apply shadow-gray-900;
   }
+  
+  /* Fix for gradient text in dark mode with forced browser extensions */
+  @media (forced-colors: active) {
+    .text-transparent.bg-clip-text,
+    [data-gradient-heading="true"] {
+      -webkit-text-fill-color: currentColor;
+      color: purple !important;
+    }
+    
+    /* Ensure progress bars are visible in forced colors mode */
+    [data-forced-colors="true"].bg-secondary {
+      background-color: #444 !important;
+    }
+    
+    [data-forced-colors="true"] .bg-primary {
+      background-color: purple !important;
+    }
+  }
+  
+  /* Styles for when color scheme is forced by browser extensions */
+  html[data-forced-colors="true"] {
+    /* Override background colors to ensure visibility */
+    .text-transparent.bg-clip-text,
+    [data-gradient-heading="true"] {
+      -webkit-text-fill-color: purple;
+      color: purple !important;
+    }
+    
+    /* Ensure progress bars are visible */
+    .bg-secondary {
+      background-color: #444 !important;
+    }
+    
+    .bg-primary {
+      background-color: purple !important;
+    }
+    
+    /* Ensure text contrast for headings and content */
+    h1, h2, h3, h4, h5, h6 {
+      color: purple !important;
+    }
+    
+    /* Ensure dark mode content is visible even with forced colors */
+    .dark\:text-gray-300,
+    .dark\:text-gray-100,
+    .dark\:text-white {
+      color: white !important;
+    }
+    
+    .dark\:bg-gray-800,
+    .dark\:bg-gray-900,
+    .dark\:bg-gray-700 {
+      background-color: #1a1a1a !important;
+    }
+  }
+  
+  /* Fallback for gradient text in case it's not visible */
+  .text-transparent.bg-clip-text,
+  [data-gradient-heading="true"] {
+    @apply dark:text-purple-300;
+  }
+  
+  /* Ensure all text is visible in dark mode */
+  html.dark h1, 
+  html.dark h2, 
+  html.dark h3, 
+  html.dark h4, 
+  html.dark h5, 
+  html.dark h6 {
+    color: white;
+  }
+  
+  /* Explicit fallback for gradient headings */
+  html.dark [class*="from-purple"],
+  html.dark [data-gradient-heading="true"] {
+    @apply text-purple-300;
+  }
 }

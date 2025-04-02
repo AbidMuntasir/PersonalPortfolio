@@ -1,10 +1,12 @@
 import { createContext, useContext, useEffect, useState } from "react";
 
 type Theme = "light" | "dark";
+type ColorSchemeForced = boolean;
 
 type ThemeContextType = {
   theme: Theme;
   toggleTheme: () => void;
+  isColorSchemeForced: ColorSchemeForced;
 };
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -13,6 +15,32 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>("light"); // Initialize with default
   const [isInitialized, setIsInitialized] = useState(false);
+  const [isColorSchemeForced, setIsColorSchemeForced] = useState<ColorSchemeForced>(false);
+
+  // Check if color scheme is being forced by browser extensions
+  useEffect(() => {
+    // Function to check if colors are being forced
+    const checkForcedColorScheme = () => {
+      // Check for forced-colors media query support
+      if (window.matchMedia('(forced-colors: active)').matches) {
+        setIsColorSchemeForced(true);
+        console.log('Forced color scheme detected');
+      } else {
+        setIsColorSchemeForced(false);
+      }
+    };
+
+    // Initial check
+    checkForcedColorScheme();
+
+    // Set up listener for changes
+    const forcedColorsMediaQuery = window.matchMedia('(forced-colors: active)');
+    forcedColorsMediaQuery.addEventListener('change', checkForcedColorScheme);
+
+    return () => {
+      forcedColorsMediaQuery.removeEventListener('change', checkForcedColorScheme);
+    };
+  }, []);
 
   // Initialize theme from localStorage or system preference (only once)
   useEffect(() => {
@@ -52,15 +80,22 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
         // Then add the current theme
         root.classList.add(theme);
         
+        // Add a data attribute for forced colors detection in CSS
+        if (isColorSchemeForced) {
+          root.setAttribute('data-forced-colors', 'true');
+        } else {
+          root.removeAttribute('data-forced-colors');
+        }
+        
         // Save to localStorage for persistence
         localStorage.setItem("theme", theme);
         
-        console.log('Theme changed to:', theme);
+        console.log('Theme changed to:', theme, isColorSchemeForced ? '(with forced colors)' : '');
       } catch (error) {
         console.error("Error applying theme:", error);
       }
     }
-  }, [theme, isInitialized]);
+  }, [theme, isInitialized, isColorSchemeForced]);
 
   // Toggle between light and dark themes
   const toggleTheme = () => {
@@ -69,7 +104,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   // Provide the theme context to children
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+    <ThemeContext.Provider value={{ theme, toggleTheme, isColorSchemeForced }}>
       {children}
     </ThemeContext.Provider>
   );

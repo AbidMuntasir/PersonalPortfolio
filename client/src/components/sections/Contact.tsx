@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { Mail, Phone, MapPin, Github, Linkedin, Twitter, Dribbble } from "lucide-react";
 import { useIntersectionObserver } from "@/hooks/use-intersection-observer";
+import { useTheme } from "@/hooks/use-theme";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -44,6 +45,7 @@ const socialLinks = personalSocialLinks.map(link => ({
 export default function Contact() {
   const { ref, inView } = useIntersectionObserver({ threshold: 0.1, triggerOnce: true });
   const { toast } = useToast();
+  const { isColorSchemeForced } = useTheme();
   
   const form = useForm<ContactFormValues>({
     resolver: zodResolver(contactFormSchema),
@@ -96,7 +98,11 @@ export default function Contact() {
           variants={fadeIn}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-3xl md:text-4xl font-bold font-sans mb-2 bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-purple-400 inline">Get In Touch</h2>
+          <h2 
+            className="text-3xl md:text-4xl font-bold font-sans mb-2 bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-purple-400 dark:from-purple-400 dark:to-purple-200 inline"
+            data-gradient-heading="true"
+          >Get In Touch</h2>
+          
           <div className="w-20 h-1 bg-primary mx-auto mb-6"></div>
           <p className="text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
             Have a project in mind or want to discuss potential opportunities? I'd love to hear from you.

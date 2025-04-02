@@ -1,5 +1,6 @@
 import { Github, Linkedin, Twitter, Dribbble, Code, Database, LineChart, BarChart2, Bot } from "lucide-react";
 import { motion } from "framer-motion";
+import { useTheme } from "@/hooks/use-theme";
 import { name, tagline, socialLinks as personalSocialLinks } from "@/lib/personal-info";
 
 const navigation = [
@@ -36,6 +37,7 @@ const footerSkills = [
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
+  const { isColorSchemeForced } = useTheme();
   
   // Split name into first and last name parts
   const nameParts = name.split(" ");
@@ -54,7 +56,10 @@ export default function Footer() {
             transition={{ duration: 0.5 }}
           >
             <a href="#home" className="text-2xl font-bold font-sans group">
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-purple-400">{firstName}</span>
+              <span 
+                className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-purple-400 dark:from-purple-400 dark:to-purple-200"
+                data-gradient-heading="true"
+              >{firstName}</span>
               <span className="group-hover:text-primary transition-colors duration-300"> {lastName}</span>
             </a>
             <p className="text-gray-400 mt-2">{tagline}</p>

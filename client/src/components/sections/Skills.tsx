@@ -2,9 +2,11 @@ import { motion } from "framer-motion";
 import { Progress } from "@/components/ui/progress";
 import { useIntersectionObserver } from "@/hooks/use-intersection-observer";
 import { dataSkills, automationSkills, technologies } from "@/lib/data";
+import { useTheme } from "@/hooks/use-theme";
 
 export default function Skills() {
   const { ref, inView } = useIntersectionObserver({ threshold: 0.1, triggerOnce: true });
+  const { isColorSchemeForced } = useTheme();
   
   const fadeIn = {
     hidden: { opacity: 0, y: 20 },
@@ -21,7 +23,10 @@ export default function Skills() {
           variants={fadeIn}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-3xl md:text-4xl font-bold font-sans mb-2 text-gray-900 dark:text-white bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-purple-400 inline">My Skills</h2>
+          <h2 
+            className="text-3xl md:text-4xl font-bold font-sans mb-2 text-gray-900 dark:text-purple-300 bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-purple-400 dark:from-purple-400 dark:to-purple-200 inline"
+            data-gradient-heading="true"
+          >My Skills</h2>
           <div className="w-20 h-1 bg-primary mx-auto mb-6"></div>
           <p className="text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
             I've worked with a variety of data technologies and tools. Here's a snapshot of my technical expertise.
@@ -55,6 +60,7 @@ export default function Skills() {
                   <Progress 
                     value={inView ? skill.percentage : 0} 
                     className="h-2.5 bg-gray-200 dark:bg-gray-600 overflow-hidden" 
+                    data-forced-colors={isColorSchemeForced ? "true" : "false"}
                   />
                   <motion.div 
                     className="absolute inset-0 bg-gradient-to-r from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
@@ -91,6 +97,7 @@ export default function Skills() {
                   <Progress 
                     value={inView ? skill.percentage : 0} 
                     className="h-2.5 bg-gray-200 dark:bg-gray-600 overflow-hidden" 
+                    data-forced-colors={isColorSchemeForced ? "true" : "false"}
                   />
                   <motion.div 
                     className="absolute inset-0 bg-gradient-to-r from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"

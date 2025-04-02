@@ -18,10 +18,9 @@ import {
   SiSelenium,
   SiDocker, 
   SiAmazonwebservices, 
-  SiGit,
-  SiMicrosoftexcel
+  SiGit
 } from "react-icons/si";
-import { FaRegChartBar, FaRobot, FaHtml5, FaChartBar } from "react-icons/fa";
+import { FaRegChartBar, FaRobot, FaHtml5, FaChartBar, FaFileExcel } from "react-icons/fa";
 
 // Skills data
 export const dataSkills = [
@@ -67,7 +66,6 @@ Available technology icons from react-icons:
 - SiDocker (Docker)
 - SiAmazonwebservices (AWS)
 - SiGit (Git)
-- SiMicrosoftexcel (Microsoft Excel)
 - FaRegChartBar (Chart Bar)
 - FaRobot (Robot - for automation)
 
@@ -87,7 +85,7 @@ export const technologies = [
   { name: "BeautifulSoup", icon: FaHtml5, iconClass: "text-purple-600" },
   { name: "Streamlit", icon: FaChartBar, iconClass: "text-red-500" },
   { name: "Data Viz", icon: FaRegChartBar, iconClass: "text-purple-500" },
-  { name: "Excel", icon: SiMicrosoftexcel, iconClass: "text-green-700" },
+  { name: "Excel", icon: FaFileExcel, iconClass: "text-green-700" },
   { name: "AWS", icon: SiAmazonwebservices, iconClass: "text-yellow-500" },
   { name: "Docker", icon: SiDocker, iconClass: "text-blue-500" },
   { name: "Git", icon: SiGit, iconClass: "text-red-500" },

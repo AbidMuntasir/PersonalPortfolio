@@ -21,7 +21,7 @@ import {
   SiGit,
   SiMicrosoftexcel
 } from "react-icons/si";
-import { FaRegChartBar, FaRobot } from "react-icons/fa";
+import { FaRegChartBar, FaRobot, FaHtml5, FaChartBar } from "react-icons/fa";
 
 // Skills data
 export const dataSkills = [
@@ -40,19 +40,20 @@ export const dataSkills = [
 ];
 
 export const automationSkills = [
-  { name: "Automated Reports", percentage: 88 },
-  { name: "Task Automation", percentage: 85 },
-  { name: "Selenium", percentage: 80 },
-  { name: "Beautiful Soup", percentage: 92 },
+  { name: "Selenium", percentage: 90 },
+  { name: "BeautifulSoup", percentage: 92 },
+  { name: "API Integration", percentage: 85 },
+  { name: "eCommerce Scraping", percentage: 95 },
+  { name: "Price Tracking", percentage: 88 },
+  { name: "Streamlit Dashboards", percentage: 80 },
   // To add more automation skills, copy this format:
-  // { name: "Skill Name", percentage: 85 },
+  // { name: "Skill Name", percentage: 85 }, 
   // Percentage should be between 0-100
   
   // EXAMPLES - Remove comments to activate or modify as needed
-  // { name: "IFTTT", percentage: 75 },
-  // { name: "Zapier", percentage: 82 },
-  // { name: "GitHub Actions", percentage: 78 },
+  // { name: "Workflow Automation", percentage: 85 },
   // { name: "Scheduled Tasks", percentage: 90 },
+  // { name: "Data Pipeline", percentage: 80 },
 ];
 
 /*
@@ -77,44 +78,41 @@ For more icons, you can import others from:
 */
 
 export const technologies = [
-  { name: "Python", icon: SiPython, iconClass: "text-blue-600" },
-  { name: "Pandas", icon: SiPandas, iconClass: "text-blue-500" },
-  { name: "NumPy", icon: SiNumpy, iconClass: "text-blue-700" },
+  { name: "Python", icon: SiPython, iconClass: "text-blue-500" },
+  { name: "Pandas", icon: SiPandas, iconClass: "text-blue-600" },
+  { name: "Numpy", icon: SiNumpy, iconClass: "text-blue-700" },
+  { name: "Scikit-learn", icon: SiScikitlearn, iconClass: "text-orange-500" },
+  { name: "Jupyter", icon: SiJupyter, iconClass: "text-orange-600" },
   { name: "Selenium", icon: SiSelenium, iconClass: "text-green-600" },
-  { name: "Jupyter", icon: SiJupyter, iconClass: "text-orange-500" },
-  { name: "Data Analysis", icon: LineChart, iconClass: "text-purple-600" },
-  // To add a new technology, use this format:
-  // { name: "Technology Name", icon: IconComponentName, iconClass: "text-color-shade" },
-  // For icon colors, you can use Tailwind colors like:
-  // text-blue-500, text-green-600, text-purple-700, text-red-500, etc.
-  
-  // EXAMPLES - Remove comments to activate or modify as needed
-  // { name: "Scikit-learn", icon: SiScikitlearn, iconClass: "text-orange-600" },
-  // { name: "Excel", icon: SiMicrosoftexcel, iconClass: "text-green-700" },
-  // { name: "AWS", icon: SiAmazonwebservices, iconClass: "text-orange-400" },
-  // { name: "Git", icon: SiGit, iconClass: "text-gray-800" },
-  // { name: "Docker", icon: SiDocker, iconClass: "text-blue-600" },
-  // { name: "Automation", icon: FaRobot, iconClass: "text-gray-600" },
-  // { name: "Dashboards", icon: LayoutDashboard, iconClass: "text-purple-500" },
+  { name: "BeautifulSoup", icon: FaHtml5, iconClass: "text-purple-600" },
+  { name: "Streamlit", icon: FaChartBar, iconClass: "text-red-500" },
+  { name: "Data Viz", icon: FaRegChartBar, iconClass: "text-purple-500" },
+  { name: "Excel", icon: SiMicrosoftexcel, iconClass: "text-green-700" },
+  { name: "AWS", icon: SiAmazonwebservices, iconClass: "text-yellow-500" },
+  { name: "Docker", icon: SiDocker, iconClass: "text-blue-500" },
+  { name: "Git", icon: SiGit, iconClass: "text-red-500" },
+  { name: "Automation", icon: FaRobot, iconClass: "text-gray-600" },
+  // Add any additional technologies here
 ];
 
 // Projects data
 export const projects = [
   {
-    title: "E-commerce Platform",
-    description: "A full-featured online store with payment processing, inventory management, and analytics dashboard.",
-    image: "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
-    category: "Web App",
-    categoryClass: "bg-primary",
+    title: "eCommerce Price Tracker",
+    description: "Automated price tracking system for Startech Bangladesh that scrapes product information, monitors price changes, tracks new products, and displays data on an interactive dashboard.",
+    image: "https://i.imgur.com/JSmZpJG.png",
+    category: "Data Analysis",
+    categoryClass: "bg-blue-500",
     technologies: [
-      { name: "React", class: "bg-blue-100 text-blue-600" },
-      { name: "Node.js", class: "bg-green-100 text-green-600" },
-      { name: "MongoDB", class: "bg-purple-100 text-purple-600" },
-      { name: "Stripe", class: "bg-yellow-100 text-yellow-600" },
+      { name: "Python", class: "bg-blue-100 text-blue-600" },
+      { name: "Selenium", class: "bg-green-100 text-green-600" },
+      { name: "Pandas", class: "bg-yellow-100 text-yellow-600" },
+      { name: "Streamlit", class: "bg-red-100 text-red-600" },
+      { name: "BeautifulSoup", class: "bg-purple-100 text-purple-600" },
     ],
-    demoLink: "#",
+    demoLink: "https://startech-price-tracker.streamlit.app/",
     demoText: "Live Demo",
-    codeLink: "#",
+    codeLink: "https://github.com/AbidMuntasir/eCommerce-Price-Tracker",
   },
   {
     title: "Task Management App",

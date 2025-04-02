@@ -265,7 +265,7 @@ The theme colors are defined in the `:root` CSS variables. To change the primary
 
 ### Favicon & Site Icons
 
-The website uses a favicon with the initials "AM" that appears in browser tabs and bookmarks.
+The website uses a favicon with the letter "A" that appears in browser tabs and bookmarks.
 
 #### Favicon Files:
 - `client/public/favicon.svg` - Vector version with dark/light mode support
@@ -274,7 +274,7 @@ The website uses a favicon with the initials "AM" that appears in browser tabs a
 
 To update the favicon:
 1. **Edit the SVG file**:
-   - The current favicon uses SVG paths for the "AM" text
+   - The current favicon uses an SVG path for the "A" letter
    - This approach ensures maximum compatibility across browsers (including Firefox)
    - The circle background uses a purple gradient
    - The SVG supports both dark and light modes via CSS media queries
@@ -288,7 +288,7 @@ To update the favicon:
    - Clear your browser cache to see favicon changes
    - Test in multiple browsers (Chrome, Firefox, Safari, Edge)
    - Check both light and dark mode appearances
-   - Verify that the "AM" initials are clearly visible
+   - Verify that the "A" letter is clearly visible
 
 ### Tailwind Config: `tailwind.config.ts`
 

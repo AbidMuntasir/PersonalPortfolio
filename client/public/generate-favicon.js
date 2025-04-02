@@ -16,12 +16,12 @@ ctx.beginPath();
 ctx.arc(256, 256, 256, 0, Math.PI * 2);
 ctx.fill();
 
-// Add text "AM"
+// Add text "A"
 ctx.fillStyle = 'white';
-ctx.font = 'bold 210px Arial, Helvetica, sans-serif';
+ctx.font = 'bold 250px Arial, Helvetica, sans-serif';
 ctx.textAlign = 'center';
 ctx.textBaseline = 'middle';
-ctx.fillText('AM', 256, 280);
+ctx.fillText('A', 256, 280);
 
 // Save as PNG
 const buffer = canvas.toBuffer('image/png');
@@ -42,12 +42,12 @@ appleCtx.beginPath();
 appleCtx.arc(90, 90, 90, 0, Math.PI * 2);
 appleCtx.fill();
 
-// Add text "AM"
+// Add text "A"
 appleCtx.fillStyle = 'white';
-appleCtx.font = 'bold 74px Arial, Helvetica, sans-serif';
+appleCtx.font = 'bold 90px Arial, Helvetica, sans-serif';
 appleCtx.textAlign = 'center';
 appleCtx.textBaseline = 'middle';
-appleCtx.fillText('AM', 90, 98);
+appleCtx.fillText('A', 90, 98);
 
 // Save as PNG
 const appleBuffer = appleCanvas.toBuffer('image/png');

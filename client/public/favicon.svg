@@ -16,8 +16,6 @@
     </style>
   </defs>
   <circle cx="256" cy="256" r="256" class="circle" />
-  <!-- A letter -->
-  <path class="letter" d="M145,352v-39.5l84-152.5h40l84,152.5v39.5h-37l-17-33h-100l-17,33h-37z M212,283h88l-44-82-44,82z" />
-  <!-- M letter -->
-  <path class="letter" d="M322,352V160h36.5l64,131.5L486,160h36v192h-37V230l-54,110h-18l-54-110v122h-37z" />
+  <!-- A letter (centered) -->
+  <path class="letter" d="M185,352v-39.5l84-152.5h40l84,152.5v39.5h-37l-17-33h-100l-17,33h-37z M252,283h88l-44-82-44,82z" />
 </svg> 

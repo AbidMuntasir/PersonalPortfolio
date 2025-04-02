@@ -39,7 +39,7 @@
   </style>
 </head>
 <body>
-  <h1>AM Favicon Generator</h1>
+  <h1>A Favicon Generator</h1>
   <p>Preview:</p>
   <canvas id="favicon" width="512" height="512"></canvas>
   
@@ -69,12 +69,12 @@
       ctx.arc(256, 256, 256, 0, Math.PI * 2);
       ctx.fill();
       
-      // Add text "AM"
+      // Add text "A"
       ctx.fillStyle = 'white';
-      ctx.font = 'bold 210px Arial, Helvetica, sans-serif';
+      ctx.font = 'bold 250px Arial, Helvetica, sans-serif';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText('AM', 256, 280);
+      ctx.fillText('A', 256, 280);
 
       // Preview the generated image
       document.getElementById('preview-favicon').src = canvas.toDataURL('image/png');
@@ -107,10 +107,10 @@
         
         // Add text
         appleCtx.fillStyle = 'white';
-        appleCtx.font = 'bold 74px Arial, Helvetica, sans-serif';
+        appleCtx.font = 'bold 90px Arial, Helvetica, sans-serif';
         appleCtx.textAlign = 'center';
         appleCtx.textBaseline = 'middle';
-        appleCtx.fillText('AM', 90, 98);
+        appleCtx.fillText('A', 90, 98);
 
         // Preview
         document.getElementById('preview-apple').src = appleCanvas.toDataURL('image/png');
@@ -138,10 +138,10 @@
       tempCtx.fill();
       
       tempCtx.fillStyle = 'white';
-      tempCtx.font = 'bold 74px Arial, Helvetica, sans-serif';
+      tempCtx.font = 'bold 90px Arial, Helvetica, sans-serif';
       tempCtx.textAlign = 'center';
       tempCtx.textBaseline = 'middle';
-      tempCtx.fillText('AM', 90, 98);
+      tempCtx.fillText('A', 90, 98);
       
       document.getElementById('preview-apple').src = tempCanvas.toDataURL('image/png');
     });

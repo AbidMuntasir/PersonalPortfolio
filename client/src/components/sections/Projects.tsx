@@ -35,17 +35,20 @@ export default function Projects() {
           {projects.map((project, index) => (
             <motion.div 
               key={project.title}
-              className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+              className="group bg-white dark:bg-gray-800 rounded-xl overflow-hidden border border-transparent dark:border-gray-700 shadow-lg hover:shadow-xl dark:shadow-gray-900/30 dark:hover:shadow-purple-900/20 transition-all duration-300 hover:-translate-y-2"
               initial="hidden"
               animate={inView ? "visible" : "hidden"}
               variants={fadeIn}
               transition={{ duration: 0.6, delay: index * 0.2 }}
+              whileHover={{
+                boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)"
+              }}
             >
               <div className="relative overflow-hidden" style={{ height: "200px" }}>
                 <img 
                   src={project.image} 
                   alt={project.title} 
-                  className="w-full h-full object-cover transition-transform duration-500 hover:scale-110" 
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
                   <div className="p-4">
@@ -56,21 +59,31 @@ export default function Projects() {
                 </div>
               </div>
               <div className="p-6">
-                <h3 className="text-xl font-bold font-sans mb-2 text-gray-900 dark:text-white">{project.title}</h3>
+                <h3 className="text-xl font-bold font-sans mb-2 text-gray-900 dark:text-white group-hover:text-primary transition-colors duration-300">{project.title}</h3>
                 <p className="text-gray-600 dark:text-gray-300 mb-4">{project.description}</p>
                 <div className="flex flex-wrap gap-2 mb-6">
                   {project.technologies.map((tech) => (
-                    <Badge key={tech.name} variant="outline" className={tech.class}>
+                    <Badge key={tech.name} variant="outline" className={`${tech.class} transition-all duration-300 group-hover:scale-105`}>
                       {tech.name}
                     </Badge>
                   ))}
                 </div>
                 <div className="flex justify-between">
-                  <a href={project.demoLink} className="text-primary hover:text-primary/80 font-medium flex items-center" target="_blank" rel="noopener noreferrer">
+                  <a 
+                    href={project.demoLink} 
+                    className="text-primary hover:text-primary/80 font-medium flex items-center transition-transform duration-300 hover:translate-x-1" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                  >
                     <span>{project.demoText}</span>
                     <ExternalLink className="ml-1 h-4 w-4" />
                   </a>
-                  <a href={project.codeLink} className="text-primary hover:text-primary/80 font-medium flex items-center" target="_blank" rel="noopener noreferrer">
+                  <a 
+                    href={project.codeLink} 
+                    className="text-primary hover:text-primary/80 font-medium flex items-center transition-transform duration-300 hover:translate-x-1" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                  >
                     <span>Source Code</span>
                     <Github className="ml-1 h-4 w-4" />
                   </a>
@@ -89,7 +102,7 @@ export default function Projects() {
         >
           <Button 
             size="lg"
-            className="bg-primary hover:bg-primary/90 text-white font-medium rounded-md shadow-md"
+            className="bg-primary hover:bg-primary/90 text-white font-medium rounded-md shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
             asChild
           >
             <Link href="/projects" className="inline-flex items-center">

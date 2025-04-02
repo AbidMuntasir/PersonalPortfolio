@@ -81,7 +81,7 @@ export class MemStorage implements IStorage {
       id: adminId,
       username: 'Abid', // Change this to your desired username
       password: '07928abid', // Change this to your desired password
-      isAdmin: true,
+      is_admin: true, // Use is_admin to match schema
       createdAt
     });
   }
@@ -100,13 +100,13 @@ export class MemStorage implements IStorage {
   async createUser(insertUser: InsertUser): Promise<User> {
     const id = this.currentUserId++;
     const createdAt = new Date().toISOString();
-    // Ensure isAdmin is a boolean
-    const isAdmin = insertUser.isAdmin === undefined ? false : insertUser.isAdmin;
+    // Ensure is_admin is a boolean
+    const is_admin = insertUser.is_admin === undefined ? false : insertUser.is_admin;
     const user: User = { 
       ...insertUser, 
       id, 
       createdAt,
-      isAdmin 
+      is_admin 
     };
     this.users.set(id, user);
     return user;

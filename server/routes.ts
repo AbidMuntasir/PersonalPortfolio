@@ -94,7 +94,7 @@ const requireAdmin = async (req: Request, res: Response, next: NextFunction) => 
     
     // Check admin status from token
     if (!decoded.isAdmin) {
-      console.log('User is not an admin');
+      console.log('User is not an admin according to token');
       return res.status(403).json({ success: false, message: "Forbidden - Admin access required" });
     }
     
@@ -114,7 +114,7 @@ const requireAdmin = async (req: Request, res: Response, next: NextFunction) => 
     }
     
     if (!user.is_admin) {
-      console.log('User is not an admin');
+      console.log('User is not an admin according to database');
       return res.status(403).json({ success: false, message: "Forbidden - Admin access required" });
     }
     
@@ -761,8 +761,11 @@ export async function registerRoutes(app: Express, storage: IStorage): Promise<S
   // Add admin protection to the messages endpoint
   app.get("/api/admin/messages", requireAdmin, async (req: AuthRequest, res) => {
     try {
-      console.log('Admin messages request received');
-      console.log('User data:', { user: req.user });
+      console.log('Admin messages request received from:', {
+        userId: req.user?.id,
+        username: req.user?.username,
+        isAdmin: req.user?.is_admin
+      });
       
       // Attempt to get messages
       const messages = await storage.getMessages();
@@ -826,6 +829,75 @@ export async function registerRoutes(app: Express, storage: IStorage): Promise<S
       });
     } catch (error) {
       console.error("Diagnostic error:", error);
+      return res.status(500).json({
+        success: false,
+        message: "Diagnostic failed",
+        error: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  // Add a user diagnostic endpoint for testing
+  app.get("/api/admin/user-test", async (req: Request, res) => {
+    try {
+      console.log('User-test diagnostic endpoint called');
+      
+      // Get auth token from cookie
+      const token = req.cookies.auth_token;
+      
+      if (!token) {
+        return res.status(200).json({
+          success: true,
+          diagnosticResult: "No auth token found in cookie"
+        });
+      }
+      
+      // Try to decode the token
+      try {
+        const decoded = jwt.verify(
+          token, 
+          process.env.JWT_SECRET || 'your-secret-key'
+        ) as JwtPayload;
+        
+        console.log('Token decoded for diagnostic:', decoded);
+        
+        // Get user from database
+        const user = await storage.getUser(decoded.userId);
+        
+        return res.status(200).json({
+          success: true,
+          diagnosticResult: {
+            tokenDecoded: true,
+            token: {
+              userId: decoded.userId,
+              username: decoded.username,
+              isAdmin: decoded.isAdmin
+            },
+            userInDatabase: !!user,
+            user: user ? {
+              id: user.id,
+              username: user.username,
+              is_admin: user.is_admin
+            } : null,
+            adminStatus: {
+              inToken: decoded.isAdmin,
+              inDatabase: user?.is_admin
+            },
+            adminMatchesToken: decoded.isAdmin === user?.is_admin
+          }
+        });
+      } catch (tokenError) {
+        console.error('Token verification failed in diagnostic:', tokenError);
+        return res.status(200).json({
+          success: true,
+          diagnosticResult: {
+            tokenDecoded: false,
+            error: tokenError instanceof Error ? tokenError.message : "Unknown error"
+          }
+        });
+      }
+    } catch (error) {
+      console.error("User diagnostic error:", error);
       return res.status(500).json({
         success: false,
         message: "Diagnostic failed",

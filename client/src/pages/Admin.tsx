@@ -18,7 +18,7 @@ import { format } from 'date-fns';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
-import { LogOut } from 'lucide-react';
+import { LogOut, ChevronLeft } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface MessagesResponse {
@@ -111,7 +111,16 @@ export default function Admin() {
 
   return (
     <div className="container mx-auto px-4 py-12">
-      <div className="flex justify-end mb-4">
+      <div className="flex justify-between mb-4">
+        <Button 
+          variant="ghost" 
+          className="flex items-center gap-2 text-purple-500 hover:text-purple-600 hover:bg-purple-100/10 transition-colors"
+          onClick={() => setLocation("/")}
+        >
+          <ChevronLeft className="h-4 w-4" />
+          Back to Home
+        </Button>
+
         <Button 
           variant="outline" 
           className="flex items-center gap-2" 

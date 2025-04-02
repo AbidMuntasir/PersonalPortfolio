@@ -42,8 +42,6 @@ export const automationSkills = [
   { name: "Selenium", percentage: 90 },
   { name: "BeautifulSoup", percentage: 92 },
   { name: "API Integration", percentage: 85 },
-  { name: "eCommerce Scraping", percentage: 95 },
-  { name: "Price Tracking", percentage: 88 },
   { name: "Streamlit Dashboards", percentage: 80 },
   // To add more automation skills, copy this format:
   // { name: "Skill Name", percentage: 85 }, 
@@ -60,11 +58,8 @@ Available technology icons from react-icons:
 - SiPython (Python)
 - SiPandas (Pandas)
 - SiNumpy (NumPy)
-- SiScikitlearn (Scikit-learn)
 - SiJupyter (Jupyter)
 - SiSelenium (Selenium)
-- SiDocker (Docker)
-- SiAmazonwebservices (AWS)
 - SiGit (Git)
 - FaRegChartBar (Chart Bar)
 - FaRobot (Robot - for automation)
@@ -79,15 +74,9 @@ export const technologies = [
   { name: "Python", icon: SiPython, iconClass: "text-blue-500" },
   { name: "Pandas", icon: SiPandas, iconClass: "text-blue-600" },
   { name: "Numpy", icon: SiNumpy, iconClass: "text-blue-700" },
-  { name: "Scikit-learn", icon: SiScikitlearn, iconClass: "text-orange-500" },
   { name: "Jupyter", icon: SiJupyter, iconClass: "text-orange-600" },
   { name: "Selenium", icon: SiSelenium, iconClass: "text-green-600" },
-  { name: "BeautifulSoup", icon: FaHtml5, iconClass: "text-purple-600" },
-  { name: "Streamlit", icon: FaChartBar, iconClass: "text-red-500" },
-  { name: "Data Viz", icon: FaRegChartBar, iconClass: "text-purple-500" },
   { name: "Excel", icon: FaFileExcel, iconClass: "text-green-700" },
-  { name: "AWS", icon: SiAmazonwebservices, iconClass: "text-yellow-500" },
-  { name: "Docker", icon: SiDocker, iconClass: "text-blue-500" },
   { name: "Git", icon: SiGit, iconClass: "text-red-500" },
   { name: "Automation", icon: FaRobot, iconClass: "text-gray-600" },
   // Add any additional technologies here
@@ -98,7 +87,7 @@ export const projects = [
   {
     title: "eCommerce Price Tracker",
     description: "Automated price tracking system for Startech Bangladesh that scrapes product information, monitors price changes, tracks new products, and displays data on an interactive dashboard.",
-    image: "https://i.imgur.com/JSmZpJG.png",
+    image: "/images/projects/price-tracker-dashboard.png",
     category: "Data Analysis",
     categoryClass: "bg-blue-500",
     technologies: [

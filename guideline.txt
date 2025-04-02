@@ -150,6 +150,7 @@ export const projects = [
     demoText: "Live Demo", // Button text, e.g., "Live Demo", "View Site", "App Store"
     codeLink: "URL to GitHub repository",
     featured: true, // Optional: Set to true to highlight this project
+    // showOnHomepage: true // Alternative way to control homepage display (not currently implemented)
   },
   // Add more projects following the same format
 ];
@@ -168,47 +169,61 @@ export const projects = [
    - bg-primary: Default purple
    - bg-red-500: Backend/Infrastructure
 
+### Project Display & Homepage Selection:
+
+The portfolio displays projects in two locations:
+1. **Main Page (Homepage)**: Shows up to 3 projects, with featured projects appearing first
+2. **All Projects Page**: Shows all projects with filtering options
+
+To control which projects appear on the homepage:
+1. Mark important projects with `featured: true` to ensure they appear first
+2. The homepage will only show the first 3 projects after sorting (featured ones first)
+3. All projects will always be available on the All Projects page
+
+For example:
+```typescript
+// This will appear on the homepage (as one of the first 3 projects)
+{
+  title: "Important Project",
+  // other properties...
+  featured: true,
+}
+
+// This might not appear on the homepage if there are already 3 featured projects
+// But it will still be available on the All Projects page
+{
+  title: "Secondary Project",
+  // other properties...
+}
+```
+
 ### Project Categories and Filtering:
 
-The portfolio includes a filterable projects page that allows visitors to filter projects by category.
+The portfolio includes a filterable projects page that dynamically generates category filters based on your projects.
 
-To ensure your project appears in the correct filter group:
-1. Set the `category` property of your project to one of the predefined categories:
-   - "Web App"
-   - "Mobile App" 
-   - "Dashboard"
-   - "Data Analysis"
-   - "Web Scraping"
-   - Or add a new category (see below)
+To work with project categories:
+1. Set the `category` property of your project to any category name you want
+   - Common categories: "Web App", "Mobile App", "Dashboard", "Data Analysis", "Web Scraping"
+   - You can create any new category simply by using it in your project definition
 
-2. If you use a new category that doesn't exist in the filters yet, you need to add it to the `categories` array in:
-   - File: `client/src/pages/AllProjects.tsx`
-   - Look for: `const categories = [ ... ]` (around line 15)
-   - Add your new category name to this array
+2. The category filters on the All Projects page are automatically generated from the categories used in your projects
+   - You don't need to manually update any filter list
+   - Only categories that are actually used by at least one project will appear as filters
 
-3. The `categoryClass` property defines the badge color shown on the project card but doesn't affect filtering.
+3. The `categoryClass` property defines the badge color shown on the project card but doesn't affect filtering
 
-Example of adding a new category:
+Example of adding a project with a completely new category:
 ```typescript
-// In AllProjects.tsx
-const categories = [
-  "All",
-  "Web App",
-  "Mobile App",
-  "Dashboard",
-  "Data Analysis",
-  "Web Scraping",
-  "Your New Category" // Add this line for a new category
-];
-
 // In data.ts
 {
   title: "Your Project",
-  category: "Your New Category", // Must match exactly what's in the categories array
+  category: "Machine Learning", // New category that didn't exist before
   categoryClass: "bg-yellow-500", // Visual style only, doesn't affect filtering
   // ... other properties
 }
 ```
+
+The "Machine Learning" category will automatically appear in the filter options on the All Projects page.
 
 ### Highlighting Featured Projects:
 
@@ -250,7 +265,7 @@ The theme colors are defined in the `:root` CSS variables. To change the primary
 
 ### Favicon & Site Icons
 
-The website uses a favicon that appears in browser tabs and bookmarks.
+The website uses a favicon with the initials "AM" that appears in browser tabs and bookmarks.
 
 #### Favicon Files:
 - `client/public/favicon.svg` - Vector version with dark/light mode support
@@ -258,10 +273,22 @@ The website uses a favicon that appears in browser tabs and bookmarks.
 - `client/public/apple-touch-icon.png` - Icon for iOS when added to home screen
 
 To update the favicon:
-1. Edit the SVG file to change the design or initials
-2. Use a tool like [RealFaviconGenerator](https://realfavicongenerator.net/) to create optimized PNGs
-3. Replace the existing files in the `client/public/` directory
-4. The SVG already has dark/light mode support via CSS media queries
+1. **Edit the SVG file**:
+   - The current favicon uses SVG paths for the "AM" text
+   - This approach ensures maximum compatibility across browsers (including Firefox)
+   - The circle background uses a purple gradient
+   - The SVG supports both dark and light modes via CSS media queries
+
+2. **Update PNG versions for maximum compatibility**:
+   - Use the provided `favicon-generator.html` tool in the public folder
+   - Open this file in a browser and use the download buttons to generate PNG versions
+   - Replace the existing files in the `client/public/` directory
+
+3. **Testing your favicon**:
+   - Clear your browser cache to see favicon changes
+   - Test in multiple browsers (Chrome, Firefox, Safari, Edge)
+   - Check both light and dark mode appearances
+   - Verify that the "AM" initials are clearly visible
 
 ### Tailwind Config: `tailwind.config.ts`
 

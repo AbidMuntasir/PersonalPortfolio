@@ -10,15 +10,22 @@ import { projects } from "@/lib/data";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 
-// Define project categories for filtering
-const categories = [
-  "All",
-  "Web App",
-  "Mobile App",
-  "Dashboard", 
-  "Data Analysis",
-  "Web Scraping"
-];
+// Dynamically generate categories from existing projects
+const generateCategories = () => {
+  // Always include "All" as the first category
+  const categories = ["All"];
+  
+  // Get unique categories from projects
+  const uniqueCategories = [...new Set(projects.map(project => project.category))];
+  
+  // Add all unique categories to the array
+  categories.push(...uniqueCategories);
+  
+  return categories;
+};
+
+// Get categories only once when the component is loaded
+const categories = generateCategories();
 
 export default function AllProjects() {
   const { ref, inView } = useIntersectionObserver({ threshold: 0.1, triggerOnce: true });

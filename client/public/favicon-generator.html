@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Favicon Generator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    canvas {
+      border: 1px solid #ccc;
+      margin: 20px 0;
+    }
+    .buttons {
+      margin: 20px 0;
+    }
+    button {
+      padding: 10px 15px;
+      background: #7C3AED;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+    img {
+      display: block;
+      margin: 20px 0;
+      border: 1px solid #eee;
+    }
+    p {
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>AM Favicon Generator</h1>
+  <p>Preview:</p>
+  <canvas id="favicon" width="512" height="512"></canvas>
+  
+  <div class="buttons">
+    <button id="download-png">Download favicon.png (512x512)</button>
+    <button id="download-apple">Download apple-touch-icon.png (180x180)</button>
+  </div>
+
+  <p>Generated Images:</p>
+  <img id="preview-favicon" alt="Favicon Preview" />
+  <img id="preview-apple" alt="Apple Touch Icon Preview" width="180" height="180" />
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Main favicon (512x512)
+      const canvas = document.getElementById('favicon');
+      const ctx = canvas.getContext('2d');
+      
+      // Create gradient background
+      const gradient = ctx.createLinearGradient(0, 0, 512, 512);
+      gradient.addColorStop(0, '#9333EA');
+      gradient.addColorStop(1, '#7C3AED');
+      
+      // Draw circle
+      ctx.fillStyle = gradient;
+      ctx.beginPath();
+      ctx.arc(256, 256, 256, 0, Math.PI * 2);
+      ctx.fill();
+      
+      // Add text "AM"
+      ctx.fillStyle = 'white';
+      ctx.font = 'bold 210px Arial, Helvetica, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('AM', 256, 280);
+
+      // Preview the generated image
+      document.getElementById('preview-favicon').src = canvas.toDataURL('image/png');
+
+      // Download buttons
+      document.getElementById('download-png').addEventListener('click', function() {
+        const link = document.createElement('a');
+        link.download = 'favicon.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      });
+
+      // Apple Touch Icon (180x180)
+      document.getElementById('download-apple').addEventListener('click', function() {
+        const appleCanvas = document.createElement('canvas');
+        appleCanvas.width = 180;
+        appleCanvas.height = 180;
+        const appleCtx = appleCanvas.getContext('2d');
+        
+        // Create gradient
+        const appleGradient = appleCtx.createLinearGradient(0, 0, 180, 180);
+        appleGradient.addColorStop(0, '#9333EA');
+        appleGradient.addColorStop(1, '#7C3AED');
+        
+        // Draw circle
+        appleCtx.fillStyle = appleGradient;
+        appleCtx.beginPath();
+        appleCtx.arc(90, 90, 90, 0, Math.PI * 2);
+        appleCtx.fill();
+        
+        // Add text
+        appleCtx.fillStyle = 'white';
+        appleCtx.font = 'bold 74px Arial, Helvetica, sans-serif';
+        appleCtx.textAlign = 'center';
+        appleCtx.textBaseline = 'middle';
+        appleCtx.fillText('AM', 90, 98);
+
+        // Preview
+        document.getElementById('preview-apple').src = appleCanvas.toDataURL('image/png');
+        
+        // Download
+        const link = document.createElement('a');
+        link.download = 'apple-touch-icon.png';
+        link.href = appleCanvas.toDataURL('image/png');
+        link.click();
+      });
+
+      // Generate Apple icon preview on load
+      const tempCanvas = document.createElement('canvas');
+      tempCanvas.width = 180;
+      tempCanvas.height = 180;
+      const tempCtx = tempCanvas.getContext('2d');
+      
+      const tempGradient = tempCtx.createLinearGradient(0, 0, 180, 180);
+      tempGradient.addColorStop(0, '#9333EA');
+      tempGradient.addColorStop(1, '#7C3AED');
+      
+      tempCtx.fillStyle = tempGradient;
+      tempCtx.beginPath();
+      tempCtx.arc(90, 90, 90, 0, Math.PI * 2);
+      tempCtx.fill();
+      
+      tempCtx.fillStyle = 'white';
+      tempCtx.font = 'bold 74px Arial, Helvetica, sans-serif';
+      tempCtx.textAlign = 'center';
+      tempCtx.textBaseline = 'middle';
+      tempCtx.fillText('AM', 90, 98);
+      
+      document.getElementById('preview-apple').src = tempCanvas.toDataURL('image/png');
+    });
+  </script>
+</body>
+</html> 

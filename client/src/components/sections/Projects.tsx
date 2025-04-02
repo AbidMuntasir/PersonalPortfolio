@@ -14,15 +14,19 @@ export default function Projects() {
     visible: { opacity: 1, y: 0 },
   };
 
-  // Sort projects to put featured ones first
-  const sortedProjects = [...projects].sort((a, b) => {
-    // If a is featured and b is not, a comes first
-    if (a.featured && !b.featured) return -1;
-    // If b is featured and a is not, b comes first
-    if (!a.featured && b.featured) return 1;
-    // Otherwise keep original order
-    return 0;
-  });
+  // Filter and sort projects for the main page
+  // 1. Put featured projects first
+  // 2. Limit to maximum 3 projects (for main page)
+  const displayedProjects = [...projects]
+    .sort((a, b) => {
+      // If a is featured and b is not, a comes first
+      if (a.featured && !b.featured) return -1;
+      // If b is featured and a is not, b comes first
+      if (!a.featured && b.featured) return 1;
+      // Otherwise keep original order
+      return 0;
+    })
+    .slice(0, 3); // Show maximum 3 projects on main page
 
   return (
     <section id="projects" ref={ref} className="py-20 bg-white dark:bg-gray-900">
@@ -42,7 +46,7 @@ export default function Projects() {
         </motion.div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {sortedProjects.map((project, index) => (
+          {displayedProjects.map((project, index) => (
             <motion.div 
               key={project.title}
               className={`group bg-white dark:bg-gray-800 rounded-xl overflow-hidden 

@@ -138,7 +138,7 @@ export const projects = [
   {
     title: "Project Title",
     description: "Detailed description of your project explaining what it does and the problems it solves.",
-    image: "URL to project image", // Use direct URLs like https://i.imgur.com/yourImage.png
+    image: "URL to project image", // Use direct URLs like https://i.imgur.com/yourImage.png or local paths like /images/projects/your-image.png
     category: "Project Category", // E.g., "Web App", "Data Analysis", "Mobile App"
     categoryClass: "bg-color-500", // Background color class for category label
     technologies: [
@@ -149,6 +149,7 @@ export const projects = [
     demoLink: "URL to live demo",
     demoText: "Live Demo", // Button text, e.g., "Live Demo", "View Site", "App Store"
     codeLink: "URL to GitHub repository",
+    featured: true, // Optional: Set to true to highlight this project
   },
   // Add more projects following the same format
 ];
@@ -159,13 +160,81 @@ export const projects = [
 1. Copy the template provided in the comments
 2. Fill in your project details
 3. Add the project object to the projects array
-4. For the image, use a direct URL to your screenshot (e.g., use Imgur or another image hosting)
+4. For the image, use a direct URL to your screenshot or local file in the public folder (e.g., `/images/projects/project-name.png`)
 5. Choose appropriate category colors:
    - bg-blue-500: Data/Analytics projects
    - bg-green-500: Web/Mobile apps
    - bg-purple-500: Dashboard/Visualization
    - bg-primary: Default purple
    - bg-red-500: Backend/Infrastructure
+
+### Project Categories and Filtering:
+
+The portfolio includes a filterable projects page that allows visitors to filter projects by category.
+
+To ensure your project appears in the correct filter group:
+1. Set the `category` property of your project to one of the predefined categories:
+   - "Web App"
+   - "Mobile App" 
+   - "Dashboard"
+   - "Data Analysis"
+   - "Web Scraping"
+   - Or add a new category (see below)
+
+2. If you use a new category that doesn't exist in the filters yet, you need to add it to the `categories` array in:
+   - File: `client/src/pages/AllProjects.tsx`
+   - Look for: `const categories = [ ... ]` (around line 15)
+   - Add your new category name to this array
+
+3. The `categoryClass` property defines the badge color shown on the project card but doesn't affect filtering.
+
+Example of adding a new category:
+```typescript
+// In AllProjects.tsx
+const categories = [
+  "All",
+  "Web App",
+  "Mobile App",
+  "Dashboard",
+  "Data Analysis",
+  "Web Scraping",
+  "Your New Category" // Add this line for a new category
+];
+
+// In data.ts
+{
+  title: "Your Project",
+  category: "Your New Category", // Must match exactly what's in the categories array
+  categoryClass: "bg-yellow-500", // Visual style only, doesn't affect filtering
+  // ... other properties
+}
+```
+
+### Highlighting Featured Projects:
+
+To make a project stand out as a featured project:
+1. Add `featured: true` to the project object
+2. Featured projects will:
+   - Appear at the top of the projects grid
+   - Have a purple border with enhanced shadow effects
+   - Display a pulsing star icon in the top corner
+   - Have special hover effects
+
+Example:
+```typescript
+{
+  title: "My Important Project",
+  // other project properties...
+  featured: true, // This makes the project highlighted
+}
+```
+
+### Using Local Images for Projects:
+
+1. Place your project images in: `client/public/images/projects/`
+2. Reference them in the project object using: `/images/projects/your-image-name.png`
+3. Use image dimensions around 500x300px for optimal display
+4. Ensure the images show up properly in both light and dark mode
 
 ---
 
@@ -178,6 +247,21 @@ This file contains global styles and theme colors.
 ### Theme Colors:
 
 The theme colors are defined in the `:root` CSS variables. To change the primary color, modify the `--primary` CSS variable in both the light and dark themes.
+
+### Favicon & Site Icons
+
+The website uses a favicon that appears in browser tabs and bookmarks.
+
+#### Favicon Files:
+- `client/public/favicon.svg` - Vector version with dark/light mode support
+- `client/public/favicon.png` - Fallback PNG version for older browsers
+- `client/public/apple-touch-icon.png` - Icon for iOS when added to home screen
+
+To update the favicon:
+1. Edit the SVG file to change the design or initials
+2. Use a tool like [RealFaviconGenerator](https://realfavicongenerator.net/) to create optimized PNGs
+3. Replace the existing files in the `client/public/` directory
+4. The SVG already has dark/light mode support via CSS media queries
 
 ### Tailwind Config: `tailwind.config.ts`
 
@@ -257,4 +341,4 @@ To deploy manually:
 4. Keep image sizes optimized for web (under 500KB if possible)
 5. Use proper image aspect ratios (ideally 16:9 or 4:3 for projects)
 
-For technical assistance or custom modifications beyond this guide, please contact the original developer. 
+For technical assistance or custom modifications beyond this guide, please contact the original developer.

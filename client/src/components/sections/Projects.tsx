@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { ExternalLink, Github } from "lucide-react";
+import { ExternalLink, Github, Star } from "lucide-react";
 import { Link } from "wouter";
 import { useIntersectionObserver } from "@/hooks/use-intersection-observer";
 import { Button } from "@/components/ui/button";
@@ -13,6 +13,16 @@ export default function Projects() {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0 },
   };
+
+  // Sort projects to put featured ones first
+  const sortedProjects = [...projects].sort((a, b) => {
+    // If a is featured and b is not, a comes first
+    if (a.featured && !b.featured) return -1;
+    // If b is featured and a is not, b comes first
+    if (!a.featured && b.featured) return 1;
+    // Otherwise keep original order
+    return 0;
+  });
 
   return (
     <section id="projects" ref={ref} className="py-20 bg-white dark:bg-gray-900">
@@ -32,18 +42,32 @@ export default function Projects() {
         </motion.div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {projects.map((project, index) => (
+          {sortedProjects.map((project, index) => (
             <motion.div 
               key={project.title}
-              className="group bg-white dark:bg-gray-800 rounded-xl overflow-hidden border border-transparent dark:border-gray-700 shadow-lg hover:shadow-xl dark:shadow-gray-900/30 dark:hover:shadow-purple-900/20 transition-all duration-300 hover:-translate-y-2"
+              className={`group bg-white dark:bg-gray-800 rounded-xl overflow-hidden 
+                ${project.featured 
+                  ? 'border-2 border-primary dark:border-primary shadow-lg hover:shadow-xl dark:shadow-primary/20 dark:hover:shadow-primary/30' 
+                  : 'border border-transparent dark:border-gray-700 shadow-lg hover:shadow-xl dark:shadow-gray-900/30 dark:hover:shadow-purple-900/20'
+                } 
+                transition-all duration-300 hover:-translate-y-2`}
               initial="hidden"
               animate={inView ? "visible" : "hidden"}
               variants={fadeIn}
               transition={{ duration: 0.6, delay: index * 0.2 }}
               whileHover={{
-                boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)"
+                boxShadow: project.featured 
+                  ? "0 20px 25px -5px rgba(139, 92, 246, 0.2), 0 10px 10px -5px rgba(139, 92, 246, 0.1)"
+                  : "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)"
               }}
             >
+              {project.featured && (
+                <div className="absolute top-0 right-0 mt-4 mr-4 z-10">
+                  <div className="bg-primary rounded-full p-1 shadow-md animate-pulse">
+                    <Star className="h-5 w-5 text-white" fill="white" />
+                  </div>
+                </div>
+              )}
               <div className="relative overflow-hidden" style={{ height: "200px" }}>
                 <img 
                   src={project.image} 

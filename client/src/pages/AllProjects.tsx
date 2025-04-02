@@ -15,7 +15,9 @@ const categories = [
   "All",
   "Web App",
   "Mobile App",
-  "Dashboard"
+  "Dashboard", 
+  "Data Analysis",
+  "Web Scraping"
 ];
 
 export default function AllProjects() {

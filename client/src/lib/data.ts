@@ -88,7 +88,7 @@ export const projects = [
     title: "eCommerce Price Tracker",
     description: "Automated price tracking system for Startech Bangladesh that scrapes product information, monitors price changes, tracks new products, and displays data on an interactive dashboard.",
     image: "/images/projects/price-tracker-dashboard.png",
-    category: "Data Analysis",
+    category: "Web Scraping",
     categoryClass: "bg-blue-500",
     technologies: [
       { name: "Python", class: "bg-blue-100 text-blue-600" },
@@ -100,6 +100,7 @@ export const projects = [
     demoLink: "https://startech-price-tracker.streamlit.app/",
     demoText: "Live Demo",
     codeLink: "https://github.com/AbidMuntasir/eCommerce-Price-Tracker",
+    featured: true,
   },
   {
     title: "Task Management App",

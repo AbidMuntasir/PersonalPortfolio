@@ -23,6 +23,7 @@ import { sql } from "drizzle-orm";
 import PgSession from "connect-pg-simple";
 import jwt from 'jsonwebtoken';
 import cookieParser from 'cookie-parser';
+import fetch from 'node-fetch';
 
 // Define JWT token type
 interface JwtPayload {
@@ -358,12 +359,34 @@ export async function registerRoutes(app: Express, storage: IStorage): Promise<S
       
       // Send email notification
       try {
-        // Store the message but don't worry about email sending
         await sendContactNotification(savedMessage);
         console.log('Contact form message processed successfully');
       } catch (emailError) {
         console.error('Error processing message:', emailError);
         // We continue even if there's an error - the message is already saved in the database
+      }
+      
+      // Trigger n8n webhook for AI auto-reply
+      try {
+        const webhookUrl = process.env.N8N_WEBHOOK_URL || '';
+        
+        if (webhookUrl) {
+          const webhookResponse = await fetch(webhookUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(savedMessage),
+          });
+          
+          console.log('n8n webhook triggered:', {
+            status: webhookResponse.status,
+            success: webhookResponse.ok
+          });
+        } else {
+          console.log('N8N_WEBHOOK_URL not configured, skipping auto-reply webhook');
+        }
+      } catch (webhookError) {
+        console.error('Error triggering n8n webhook:', webhookError);
+        // Continue even if webhook fails - the message is saved in the database
       }
       
       res.status(201).json({ success: true, message: "Message sent successfully" });

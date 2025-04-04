@@ -74,10 +74,8 @@ export const technologies = [
   { name: "Python", icon: SiPython, iconClass: "text-blue-500" },
   { name: "Pandas", icon: SiPandas, iconClass: "text-blue-600" },
   { name: "Numpy", icon: SiNumpy, iconClass: "text-blue-700" },
-  { name: "Jupyter", icon: SiJupyter, iconClass: "text-orange-600" },
   { name: "Selenium", icon: SiSelenium, iconClass: "text-green-600" },
   { name: "Excel", icon: FaFileExcel, iconClass: "text-green-700" },
-  { name: "Git", icon: SiGit, iconClass: "text-red-500" },
   { name: "Automation", icon: FaRobot, iconClass: "text-gray-600" },
   // Add any additional technologies here
 ];

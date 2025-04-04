@@ -39,17 +39,19 @@ export default function About() {
         
         <div className="flex flex-col md:flex-row">
           <motion.div 
-            className="md:w-2/5 mb-10 md:mb-0"
+            className="md:w-2/5 mb-10 md:mb-0 flex justify-center"
             initial="hidden"
             animate={inView ? "visible" : "hidden"}
             variants={fadeIn}
             transition={{ duration: 0.6 }}
           >
-            <img 
-              src={profileImage} 
-              alt={`${name} professional photo`} 
-              className="rounded-lg shadow-lg w-full object-cover h-[450px]"
-            />
+            <div className="w-full max-w-sm overflow-hidden rounded-lg shadow-md">
+              <img 
+                src={profileImage} 
+                alt={`${name} professional photo`} 
+                className="w-full h-auto object-cover rounded-lg transition-all duration-300 hover:scale-[1.02]"
+              />
+            </div>
           </motion.div>
           
           <motion.div 

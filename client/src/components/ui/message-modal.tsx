@@ -1,19 +1,62 @@
 import React from 'react';
 import { Message } from '@shared/schema';
-import { Mail, Calendar, User, FileText, Reply } from 'lucide-react';
+import { Mail, Calendar, User, FileText, Reply, Trash2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { useToast } from '@/hooks/use-toast';
+import axios from 'axios';
 import './message-styles.css';
 
 interface MessageModalProps {
   message: Message | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onMessageDeleted?: (messageId: number) => void;
 }
 
-export function MessageModal({ message, open, onOpenChange }: MessageModalProps) {
+export function MessageModal({ message, open, onOpenChange, onMessageDeleted }: MessageModalProps) {
+  const { toast } = useToast();
+  const [isDeleting, setIsDeleting] = React.useState(false);
+  
   if (!message) return null;
+  
+  const handleDelete = async () => {
+    if (!message) return;
+    
+    try {
+      setIsDeleting(true);
+      const response = await axios.delete(`/api/admin/messages/${message.id}`);
+      
+      if (response.data.success) {
+        toast({
+          title: "Message deleted",
+          description: "The message has been deleted successfully.",
+          variant: "default",
+        });
+        
+        onOpenChange(false);
+        if (onMessageDeleted) {
+          onMessageDeleted(message.id);
+        }
+      } else {
+        toast({
+          title: "Error",
+          description: response.data.message || "Failed to delete message",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Error deleting message:", error);
+      toast({
+        title: "Error",
+        description: "An unexpected error occurred while deleting the message.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -63,7 +106,18 @@ export function MessageModal({ message, open, onOpenChange }: MessageModalProps)
           </div>
         </div>
         
-        <div className="flex justify-end mt-6">
+        <div className="flex justify-between items-center mt-6">
+          <Button 
+            variant="destructive"
+            size="sm"
+            className="flex items-center gap-2"
+            onClick={handleDelete}
+            disabled={isDeleting}
+          >
+            <Trash2 className="h-4 w-4" />
+            {isDeleting ? "Deleting..." : "Delete Message"}
+          </Button>
+          
           <Button 
             variant="default"
             className="flex items-center gap-2"

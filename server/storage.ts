@@ -21,6 +21,7 @@ export interface IStorage {
   getMessages(): Promise<Message[]>;
   getMessage(id: number): Promise<Message | undefined>;
   createMessage(message: InsertMessage & { createdAt: string }): Promise<Message>;
+  deleteMessage(id: number): Promise<boolean>;
   
   // Blog related methods
   getBlogs(): Promise<Blog[]>;
@@ -134,6 +135,10 @@ export class MemStorage implements IStorage {
     const message: Message = { ...messageData, id };
     this.messages.set(id, message);
     return message;
+  }
+  
+  async deleteMessage(id: number): Promise<boolean> {
+    return this.messages.delete(id);
   }
   
   // Blog related methods

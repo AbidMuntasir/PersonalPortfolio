@@ -839,6 +839,38 @@ export async function registerRoutes(app: Express, storage: IStorage): Promise<S
       });
     }
   });
+  
+  // Add endpoint to delete a message
+  app.delete("/api/admin/messages/:id", requireAdmin, async (req: AuthRequest, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ success: false, message: "Invalid message ID" });
+      }
+      
+      console.log(`Deleting message with ID: ${id}`);
+      const success = await storage.deleteMessage(id);
+      
+      if (!success) {
+        return res.status(404).json({ 
+          success: false, 
+          message: "Message not found or could not be deleted" 
+        });
+      }
+      
+      return res.status(200).json({ 
+        success: true, 
+        message: "Message deleted successfully" 
+      });
+    } catch (error) {
+      console.error("Error deleting message:", error);
+      return res.status(500).json({ 
+        success: false, 
+        message: "Failed to delete message",
+        error: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
 
   // Add a diagnostic endpoint for testing
   app.get("/api/admin/diagnostic", requireAdmin, async (req: AuthRequest, res) => {

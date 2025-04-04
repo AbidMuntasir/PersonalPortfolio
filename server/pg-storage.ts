@@ -85,6 +85,19 @@ export class PostgresStorage implements IStorage {
     return newMessage;
   }
 
+  async deleteMessage(id: number): Promise<boolean> {
+    try {
+      const db = await getDb();
+      const [deletedMessage] = await db.delete(messages)
+        .where(eq(messages.id, id))
+        .returning();
+      return !!deletedMessage;
+    } catch (error) {
+      console.error('Error deleting message:', error);
+      return false;
+    }
+  }
+
   // Blog related methods
   async getBlogs(): Promise<Blog[]> {
     const db = await getDb();

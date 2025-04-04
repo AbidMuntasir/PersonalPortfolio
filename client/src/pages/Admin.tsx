@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Message } from '@shared/schema';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { 
   Table, 
   TableBody, 
@@ -15,6 +15,7 @@ import { Button } from '@/components/ui/button';
 import { LogOut, ChevronLeft, MessageSquare, Inbox } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { MessageModal } from '@/components/ui/message-modal';
+import { useToast } from '@/hooks/use-toast';
 import '@/components/ui/message-styles.css';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
@@ -25,6 +26,8 @@ interface MessagesResponse {
 }
 
 export default function Admin() {
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
   const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   
@@ -40,6 +43,16 @@ export default function Admin() {
   const viewMessage = (message: Message) => {
     setSelectedMessage(message);
     setIsModalOpen(true);
+  };
+  
+  const handleMessageDeleted = (messageId: number) => {
+    toast({
+      title: "Message deleted",
+      description: "The message has been removed from your inbox.",
+    });
+    
+    // Refresh the messages list
+    queryClient.invalidateQueries(['admin-messages']);
   };
 
   // Fetch messages
@@ -173,7 +186,8 @@ export default function Admin() {
       <MessageModal 
         message={selectedMessage} 
         open={isModalOpen} 
-        onOpenChange={setIsModalOpen} 
+        onOpenChange={setIsModalOpen}
+        onMessageDeleted={handleMessageDeleted}
       />
     </div>
   );

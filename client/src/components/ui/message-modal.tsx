@@ -1,6 +1,6 @@
 import React from 'react';
 import { Message } from '@shared/schema';
-import { X, Mail, Calendar, User, FileText } from 'lucide-react';
+import { X, Mail, Calendar, User, FileText, Reply } from 'lucide-react';
 import { format } from 'date-fns';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -74,16 +74,15 @@ export function MessageModal({ message, open, onOpenChange }: MessageModalProps)
           </div>
         </div>
         
-        <div className="flex justify-end gap-2 mt-6">
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Close
-          </Button>
+        <div className="flex justify-end mt-6">
           <Button 
             variant="default"
+            className="flex items-center gap-2"
             onClick={() => {
               window.location.href = `mailto:${message.email}?subject=Re: ${message.subject}&body=Hello ${message.name},%0D%0A%0D%0ARe: ${message.subject}%0D%0A%0D%0A`;
             }}
           >
+            <Reply className="h-4 w-4" />
             Reply via Email
           </Button>
         </div>

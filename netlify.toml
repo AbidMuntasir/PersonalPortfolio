@@ -5,6 +5,10 @@
 [build.environment]
   NODE_VERSION = "20"
 
+# Important: Configure these environment variables in the Netlify UI
+# DATABASE_URL - Your Neon database connection string
+# JWT_SECRET - Secret key for JWT token generation/verification
+
 # Handle API requests
 [[redirects]]
   from = "/api/*"
@@ -36,8 +40,11 @@
     "shared/**/*"
   ]
 
+# API function configuration - increased timeout for Neon cold starts
 [functions.api]
   format = "esm"
+  timeout = 30
+  memory = 1024
   external_node_modules = [
     "express",
     "express-session",

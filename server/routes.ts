@@ -156,6 +156,28 @@ export async function registerRoutes(app: Express, storage: IStorage): Promise<S
     authMethod: 'JWT'
   });
 
+  // Add a health check endpoint to keep the database warm
+  app.get("/api/health", async (req: Request, res: Response) => {
+    try {
+      // Test database connection
+      const db = await getDb();
+      await db.execute(sql`SELECT 1`);
+      
+      return res.status(200).json({
+        success: true,
+        message: "Service is healthy",
+        timestamp: new Date().toISOString()
+      });
+    } catch (error) {
+      console.error("Health check failed:", error);
+      return res.status(500).json({
+        success: false,
+        message: "Service is unhealthy",
+        timestamp: new Date().toISOString()
+      });
+    }
+  });
+
   // Add a middleware to log cookie settings on each request
   app.use((req, res, next) => {
     if (isDevelopment) {

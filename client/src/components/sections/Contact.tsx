@@ -4,7 +4,7 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { Mail, Phone, MapPin, Github, Linkedin, Twitter, Dribbble } from "lucide-react";
+import { Mail, Phone, MapPin, Github, Linkedin, Twitter, Instagram } from "lucide-react";
 import { useIntersectionObserver } from "@/hooks/use-intersection-observer";
 import { useTheme } from "@/hooks/use-theme";
 import { useToast } from "@/hooks/use-toast";
@@ -31,7 +31,7 @@ const iconMap: Record<string, any> = {
   Github,
   Linkedin,
   Twitter,
-  Dribbble
+  Instagram
 };
 
 // Create social links with icons
@@ -41,6 +41,17 @@ const socialLinks = personalSocialLinks.map(link => ({
   href: link.href,
   bgClass: "bg-primary/10 text-primary hover:bg-primary hover:text-white"
 }));
+
+// Map icon components (add any missing ones you use)
+const iconComponents = {
+  Mail,
+  Phone,
+  MapPin,
+  Github,
+  Linkedin,
+  Twitter,
+  Instagram,
+};
 
 export default function Contact() {
   const { ref, inView } = useIntersectionObserver({ threshold: 0.1, triggerOnce: true });

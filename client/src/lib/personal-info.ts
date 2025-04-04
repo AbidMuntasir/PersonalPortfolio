@@ -8,7 +8,7 @@
 // Basic information
 export const name = "Abid Muntasir";
 export const tagline = "Python Data Specialist";
-export const bio = "Meet me, Abid – Turning Raw Data into Smart Decisions \n\nNeed to extract, clean, and analyze data efficiently? I’ve got you covered! While I’m new on Upwork, I have built real-world projects that showcase my expertise in web scraping, data automation, and interactive dashboards\n\n Lets connect and collaborate on your next project!";
+export const bio = "Meet me, Abid – Turning Raw Data into Smart Decisions \n\nNeed to extract, clean, and analyze data efficiently? I've got you covered! While I'm new on Upwork, I have built real-world projects that showcase my expertise in web scraping, data automation, and interactive dashboards\n\n Lets connect and collaborate on your next project!";
 
 // Professional roles for the typing effect
 export const roles = [
@@ -39,9 +39,9 @@ export const socialLinks = [
     href: "https://twitter.com/yourhandle" 
   },
   { 
-    name: "Dribbble", 
-    icon: "Dribbble", 
-    href: "https://dribbble.com/yourusername" 
+    name: "Instagram", 
+    icon: "Instagram", 
+    href: "https://www.instagram.com/abid_muntasir/" 
   },
 ];
 

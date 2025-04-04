@@ -929,6 +929,19 @@ export async function registerRoutes(app: Express, storage: IStorage): Promise<S
     }
   });
 
+  // Add logout endpoint
+  app.post("/api/auth/logout", (req: Request, res: Response) => {
+    console.log('Logout request received');
+    res.clearCookie('auth_token', { 
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+      path: '/'
+    });
+    console.log('Auth token cookie cleared');
+    return res.status(200).json({ success: true, message: "Logged out successfully" });
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Message } from '@shared/schema';
-import { X, Mail, Calendar, User, FileText, Reply } from 'lucide-react';
+import { Mail, Calendar, User, FileText, Reply } from 'lucide-react';
 import { format } from 'date-fns';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -19,20 +19,9 @@ export function MessageModal({ message, open, onOpenChange }: MessageModalProps)
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-3xl max-h-[85vh] overflow-y-auto">
         <DialogHeader className="message-modal-header">
-          <div className="flex items-center justify-between">
-            <DialogTitle className="text-xl font-semibold text-gray-900 dark:text-gray-100">
-              {message.subject}
-            </DialogTitle>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 rounded-full"
-              onClick={() => onOpenChange(false)}
-            >
-              <X className="h-4 w-4" />
-              <span className="sr-only">Close</span>
-            </Button>
-          </div>
+          <DialogTitle className="text-xl font-semibold text-gray-900 dark:text-gray-100">
+            {message.subject}
+          </DialogTitle>
         </DialogHeader>
         
         <div className="message-info">

@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Github, Linkedin, Twitter, Dribbble, LucideIcon } from "lucide-react";
+import { Github, Linkedin, Twitter, Instagram, LucideIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTypingEffect } from "@/hooks/use-typing-effect";
 import { useTheme } from "@/hooks/use-theme";
@@ -18,7 +18,7 @@ const iconMap: Record<string, LucideIcon> = {
   Github,
   Linkedin,
   Twitter,
-  Dribbble
+  Instagram
 };
 
 // Convert social links to include actual icon components

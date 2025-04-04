@@ -1,4 +1,4 @@
-import { Github, Linkedin, Twitter, Dribbble, Code, Database, LineChart, BarChart2, Bot } from "lucide-react";
+import { Github, Linkedin, Twitter, Instagram, Code, Database, LineChart, BarChart2, Bot } from "lucide-react";
 import { motion } from "framer-motion";
 import { useTheme } from "@/hooks/use-theme";
 import { name, tagline, socialLinks as personalSocialLinks } from "@/lib/personal-info";
@@ -16,7 +16,12 @@ const iconMap: Record<string, any> = {
   Github,
   Linkedin,
   Twitter,
-  Dribbble
+  Instagram,
+  Code,
+  Database,
+  LineChart,
+  BarChart2,
+  Bot
 };
 
 // Use the actual social links from personal info
